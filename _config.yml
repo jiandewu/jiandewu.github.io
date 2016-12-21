@@ -38,7 +38,7 @@ paginate: 20
 title : 我博故我刻
 tagline: My Browsing Being My Blog
 assets: /assets
-baseurl: /
+baseurl: 
 
 #### Language
 language: zh-CN    ## blog site languages: en, zh-CN, zh-TW
