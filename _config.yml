@@ -97,9 +97,9 @@ author:
   zhihu:      ## e.g. jark  for http://www.zhihu.com/people/jark
   email: jiande@jdwu.me
   twitter:    ## e.g. jarkwu for https://twitter.com/jarkwu
-  github: https://github.com/jiandewu
+  github: jiandewu
   facebook:   ## e.g. imjark for https://facebook.com/imjark
-  linkedin: https://www.linkedin.com/in/jiandewu
+  linkedin: jiandewu
   google_plus:    ## e.g. "111190881341800841449" for https://plus.google.com/u/0/111190881341800841449, the "" is needed!
   stackoverflow:  ## e.g. 3222790 for http://stackoverflow.com/users/3222790/jark
 ## if you set them, the corresponding  share button will show on the footer
