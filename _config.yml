@@ -11,8 +11,7 @@ permalink: /:categories/:year/:month/:day/:title
 
 #### Markdown Processors
 #### markdown: redcarpet
-markdown: kramdown
-#kramdown:
+#redcarpet:
 #  extensions:
 #    - hard_wrap
 #    - no_intra_emphasis
@@ -21,6 +20,10 @@ markdown: kramdown
 #    - tables
 #    - lax_spacing
 #    - with_toc_data
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
 
 #### Default Attributes
 defaults:
