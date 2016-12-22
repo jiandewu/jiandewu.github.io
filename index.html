@@ -11,7 +11,7 @@ layout: default
   <ul class="post-list">
     {% for post in paginator.posts %}
       <li>
-        <h3 style="text-align:left;float:left;"><a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a><div class="post-link" style="text-align:right;float:right;">{{ post.date | date: "%b %-d, %Y" }}</div></h3>
+        <h3><a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a><span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span></h3>
 
         {% if site.post_excerpt %}
         <div class="post-excerpt">
