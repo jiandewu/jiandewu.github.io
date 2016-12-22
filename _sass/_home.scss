@@ -23,12 +23,12 @@
 }
 .post-list {
     margin: 0;
-	padding: 20px 40px;
+	padding: 2px 4px;
     list-style: none;
     > li {
-        padding-bottom: 30px;
+        padding-bottom: 3px;
         border-bottom: 1px solid #CCC;
-    	margin-bottom: 30px;
+    	margin-bottom: 3px;
     }
     .post-title {
     	font-size: 28px;
@@ -38,7 +38,7 @@
     .post-meta {
     	font-size: $small-font-size;
     	color: #666;
-        margin: 0 20px;
+        margin: 0 2px;
         margin-bottom: .1em;
     }
     .post-excerpt {
