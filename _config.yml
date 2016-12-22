@@ -1,122 +1,37 @@
-#---------------------------------------------------------------
-# Theme version infromation
-#---------------------------------------------------------------
-version: 1.0
+# Site settings
+title: 我博故我刻
+url: "http://jiandewu.github.io"    # the protocol and hostname of your site, eg. `http://laobubu.github.io`
+baseurl: "" # the prefix of your site uri, eg. `/jekyll-theme-EasyBook` or just one slash `/`
+#timezone: Asia/Beijing
+description: >
+  My Browsing Being My Blog
 
-#---------------------------------------------------------------
-# Build setting
-#---------------------------------------------------------------
-gems: 
+# Your information
+email: jiande@jdwu.me
+author: Jiande
+avatar: "/author.jpg"
+profile: My Browsing Being My Blog
+#twitter_username: twitter_username
+github_username:  jiandewu
+
+# Comment Service (Disqus or 多说)
+#  choose one and un-comment the line to active it
+#disqus_shortname: xxx   # get one: https://disqus.com/admin/signup/
+#duoshuo_shortname: xxx  # get one: http://duoshuo.com/create-site/
+
+permalink: /archivers/:title
+gems:
  - jekyll-paginate
+ - jekyll-gist
  - jemoji
-# Config sass build output by sass_dir
-# Config sass output is compressed or not
-#
-sass:
-    sass_dir: /assets/stylesheet
-    style: :compressed
 
-
-#---------------------------------------------------------------
-# Site infromation setting
-#---------------------------------------------------------------
-
-# Site
-## You can create a locale setting at _locales and name *.yml
-title: "我博故我刻"
-description: "My Browsing Being My Blog"
-#keywords: "Pithy"
-locales: "zh_CN"
-
-#### Language
-#language: zh-CN    ## blog site languages: en, zh-CN, zh-TW
-
-
-# URL
-## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and baseurl as '/child/'
-url: ""
-baseurl: ""
-permalink: /:year/:month/:day/:title
-
-
-# Pagination
-## Set per_page to 0 to disable pagination
+# Build settings
 paginate: 5
-paginate_path: "/page:num/"
+paginate_path: "page:num"
 
+highlighter: rouge
+markdown: kramdown
 
-# Writing
-highlighter: 'rouge'
 kramdown:
-  input:  GFM
-
-# RSS
-rss:
-  path: "/feed.xml"
-  icon: "rss"
-
-
-#---------------------------------------------------------------
-# Authour infromation setting
-#---------------------------------------------------------------
-
-# Author
-author:
-  name: "Jiande"
-  avatar: "/author.jpg"
-  motto: "My Browsing Being My Blog"
-
-# Socials
-## If you want the social show,place sure the social no comment
-## The socials icon base font-awesome,you can learn more on http://fontawesome.io/icons/
-socials:
-    - name: "weibo"
-      url: "http://www.weibo.com/usename/"
-      icon: "weibo"
-    - name: "github"
-      url: "https://github.com/jiandewu"
-      icon: "github"
-    - name: "facebook"
-      url: "https://www.facebook.com/usename"
-      icon: "facebook"
-    - name: "linkedin"
-      url: "https://www.linkedin.com/jiandewu"
-      icon: "linkedin"
-
-
-
-#---------------------------------------------------------------
-# Site comment setting
-#---------------------------------------------------------------
-
-comment:
-  enable: false
-
-# duoshuo
-duoshuo:
-  enable: false
-  short_name: "your duoshuo short_name"
-
-# disqus
-disqus:
-  enable: false
-  short_name: "your disqus short_name"
-
-#---------------------------------------------------------------
-# Site share setting
-#---------------------------------------------------------------
-duoshuo_share:
-    enable: false
-
-#---------------------------------------------------------------
-# Site analysis setting
-#---------------------------------------------------------------
-# Baidu analysis
-baidu_analysis:
-  enable: false
-  token: "your baidu analysis token"
-
-# Google analysis
-google_analysus:
-  enable: false
-  token: "your google analysis token"
+  input: GFM
+  syntax_highlighter: rouge
