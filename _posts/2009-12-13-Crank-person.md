@@ -17,11 +17,7 @@ categories: Featured
 
 [//]: # (所以也许有的地震预测理论本来不是民科的，经过这些"地震可预测"者的大力宣传终于越来越民科了。)
 
-->![](https://drive.google.com/uc?id=0B5pYZc0OeTm1Sm9yQjRJVDZJODQ)<-
-
-{:.center}
-![](https://docs.google.com/uc?id=0B5pYZc0OeTm1LXFueTBUcW0ySUU)
-
-.center {
-  text-align: center;
-}
+<p align="center">
+<img src="https://drive.google.com/uc?id=0B5pYZc0OeTm1Sm9yQjRJVDZJODQ">
+<img src="https://docs.google.com/uc?id=0B5pYZc0OeTm1LXFueTBUcW0ySUU">
+</p>
