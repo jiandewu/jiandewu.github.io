@@ -23,7 +23,7 @@
 }
 .post-list {
     margin: 0;
-	padding: 2px 4px;
+	padding: 20px 40px;
     list-style: none;
     > li {
         padding-bottom: 30px;
@@ -39,7 +39,7 @@
     	font-size: $small-font-size;
     	color: #666;
         margin: 0 20px;
-        margin-bottom: .5em;
+        margin-bottom: .1em;
     }
     .post-excerpt {
         &, * {
