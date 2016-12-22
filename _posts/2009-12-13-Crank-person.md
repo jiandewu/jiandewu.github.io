@@ -15,8 +15,13 @@ categories: Featured
 
 比如说很多民科理论中必定有"宇宙"，"空间"等等，而研究对象却往往是"秤砣"，"小刀"之类，绝对不会出现中级词汇，比如"贝赛尔函数"，"矩阵"等等。
 
-所以也许有的地震预测理论本来不是民科的，经过这些"地震可预测"者的大力宣传终于越来越民科了。
+[//]: # (所以也许有的地震预测理论本来不是民科的，经过这些"地震可预测"者的大力宣传终于越来越民科了。)
 
+->![](https://drive.google.com/uc?id=0B5pYZc0OeTm1Sm9yQjRJVDZJODQ)<-
+
+{:.center}
 ![](https://docs.google.com/uc?id=0B5pYZc0OeTm1LXFueTBUcW0ySUU)
 
-![](https://drive.google.com/uc?id=0B5pYZc0OeTm1Sm9yQjRJVDZJODQ)
+.center {
+  text-align: center;
+}
