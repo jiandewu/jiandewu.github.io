@@ -16,7 +16,7 @@ First of all, use git log to see exactly which commit you want to pick. An examp
 
 In this case, `62ecb3` is the cherry and you want to pick it!
 
-~~~ 
+~~~
 $ git checkout master
 $ git cherry-pick 62ecb3
 ~~~
