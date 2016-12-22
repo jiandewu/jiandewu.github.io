@@ -3,7 +3,7 @@ layout: post
 title: 常用正则表达式
 tags:
 - Regex
-categories: Computer
+categories: IT
 ---
 ##常用的正则表达式
 

@@ -3,7 +3,7 @@ layout: post
 title: Git之Cherry-Picking用例
 tags:
 - Git
-categories: IT Tools
+categories: IT
 ---
 
 First of all, use `git log` to see exactly which commit you want to pick. An example:
