@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Cherry-Picking用例
+title: Git之Cherry-Picking用例
 tags:
 - Git
 categories: IT工具
