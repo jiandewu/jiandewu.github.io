@@ -1,7 +1,8 @@
 ---
 layout: post
 title: 常用正则表达式
-tags: Regex
+tags:
+- Regex
 categories: Technology
 ---
 ### 常用的正则表达式
