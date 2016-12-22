@@ -6,7 +6,7 @@ version: 1.0
 #---------------------------------------------------------------
 # Build setting
 #---------------------------------------------------------------
-gems: [jekyll-paginate]
+gems: [jekyll-paginate, jemoji]
 # Config sass build output by sass_dir
 # Config sass output is compressed or not
 #
@@ -24,7 +24,7 @@ sass:
 title: "我博故我刻"
 description: "My Browsing Being My Blog"
 #keywords: "Pithy"
-locale: "zh_CN"
+locales: "zh_CN"
 
 #### Language
 #language: zh-CN    ## blog site languages: en, zh-CN, zh-TW
@@ -60,7 +60,7 @@ rss:
 
 # Author
 author:
-  name: "jiande"
+  name: "Jiande"
   avatar: "/author.jpg"
   motto: "My Browsing Being My Blog"
 
