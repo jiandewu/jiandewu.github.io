@@ -3,10 +3,10 @@ layout: post
 title: Git之Cherry-Picking用例
 tags:
 - Git
-categories: IT工具
+categories: IT Tools
 ---
 
-First of all, use git log to see exactly which commit you want to pick. An example:
+First of all, use `git log` to see exactly which commit you want to pick. An example:
 
 ~~~
 dd2e86 - 946992 - 9143a9 - a6fd86 - 5a6057 [master]
