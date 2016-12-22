@@ -23,8 +23,12 @@ sass:
 ## You can create a locale setting at _locales and name *.yml
 title: "我博故我刻"
 description: "My Browsing Being My Blog"
-keywords: "Pithy"
-locale: "zh_CN"
+#keywords: "Pithy"
+#locale: "zh_CN"
+
+#### Language
+language: zh-CN    ## blog site languages: en, zh-CN, zh-TW
+
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and baseurl as '/child/'
@@ -43,9 +47,6 @@ paginate_path: "/page:num/"
 highlighter: 'rouge'
 kramdown:
   input:  GFM
-  enable_coderay: true
-  coderay:
-    coderay_line_numbers:  nil
 
 # RSS
 rss:
@@ -60,7 +61,7 @@ rss:
 # Author
 author:
   name: "jiande"
-  avatar: "http://jekyllrb.com/img/logo-2x.png"
+  avatar: "/author.jpg"
   motto: "My Browsing Being My Blog"
 
 # Socials
