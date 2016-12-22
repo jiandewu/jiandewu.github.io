@@ -25,7 +25,7 @@ That’s all. `62ecb3` is now applied to the master branch and commited (as a ne
 
 You could also just grab config.xml from the development branch:
 
-```
+```bash
 $ git checkout testing
 $ git checkout development -- config.xml
 ```
