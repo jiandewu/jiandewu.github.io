@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "民科"的几大特点
+title: “民科”的几大特点
 tags: 民科
 categories: Featured
 ---
@@ -17,6 +17,6 @@ categories: Featured
 
 所以也许有的地震预测理论本来不是民科的，经过这些"地震可预测"者的大力宣传终于越来越民科了。
 
-![](http://ww1.sinaimg.cn/mw690/81b78497jw1emfgwkasznj21hc0u0qb7.jpg)
+![](https://docs.google.com/uc?id=0B5pYZc0OeTm1LXFueTBUcW0ySUU)
 
-![](https://drive.google.com/file/d/0B5pYZc0OeTm1LXFueTBUcW0ySUU/view?usp=sharing)
+![](https://drive.google.com/uc?id=0B5pYZc0OeTm1Sm9yQjRJVDZJODQ)
