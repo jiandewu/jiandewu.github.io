@@ -2,7 +2,6 @@
 exclude: [".rvmrc", ".rbenv-version", "README.md", "Rakefile", "changelog.md"]
 
 #### Code Highlighter
-## highlighter: pygments
 highlighter: rouge
 
 #### Permalink
@@ -10,32 +9,9 @@ highlighter: rouge
 permalink: /:categories/:year/:month/:day/:title 
 
 #### Markdown Processors
-#### markdown: redcarpet
-#redcarpet:
-#  extensions:
-#    - hard_wrap
-#    - no_intra_emphasis
-#    - autolink
-#    - strikethrough
-#    - tables
-#    - lax_spacing
-#    - with_toc_data
 markdown: kramdown
 kramdown:
-  input: GFM
-  syntax_highlighter: rouge
-
-  # Rouge Highlighter in Kramdown › http://kramdown.gettalong.org/syntax_highlighter/rouge.html
-  # span, block element options fall back to global
-  syntax_highlighter_opts:
-    # Rouge Options › https://github.com/jneen/rouge#full-options
-    css_class: 'highlight'
-    #line_numbers: true # bad idea, spans don't need linenos and would inherit this option
-    span:
-      line_numbers: false
-    block:
-      line_numbers: true
-      start_line: 1
+    input: GFM
       
 #### Default Attributes
 defaults:
