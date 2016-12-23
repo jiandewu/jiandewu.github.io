@@ -12,9 +12,11 @@
         <div class="col-main">
           {{ content }}
         </div>
+        {% if site.side_bar %}
         <div class="col-second">
           {% include sidebar.html %}
         </div>
+        {% endif %}
       </div>
     </div>
 

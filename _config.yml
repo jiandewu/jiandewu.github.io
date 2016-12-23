@@ -15,6 +15,7 @@ profile: My Browsing Being My Blog
 github_username:  jiandewu
 
 post_excerpt: false
+side_bar: false
 
 # Comment Service (Disqus or 多说)
 #  choose one and un-comment the line to active it
