@@ -15,7 +15,7 @@ profile: My Browsing Being My Blog
 #github_username:  jiandewu
 
 post_excerpt: false
-side_bar: false
+side_bar: true
 
 comments: true
 # Comment Service (Disqus or 多说)
