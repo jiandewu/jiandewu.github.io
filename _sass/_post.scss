@@ -14,7 +14,7 @@
         .post-meta {
         	color:#999;
         	font-size:$small-font-size;
-        	margin: 0 0px;
+        	margin: 0 -90px;
         }
         @include media-query($on-palm) {
     		text-align:center;
