@@ -15,11 +15,11 @@ public: true
 {% assign category = categories | split:',' | sort %}
 {% for item in (0..site.categories.size) %}{% unless forloop.last %}
 {% capture word %}{{ category[item] | strip_newlines }}{% endcapture %}
-<h2 class="category" id="{{ word }}">{{ word | upcase }}({{ site.categories[word].size }})</h2>
+<h2 class="category" id="{{ word }}">{{ word | upcase }} ({{ site.categories[word].size }})</h2>
 <a name="{{ word }}"></a> 
 <ul>
 {% for post in site.categories[word] %}{% if post.title != null %}
-<li><span>{{ post.date | date: "%b %d" }}</span> » <a href="{{ site.baseurl}}{{ post.url }}">{{ post.title }}</a></li>
+<li><span>{{ post.date | date: "%b %d, %Y" }}</span> » <a href="{{ site.baseurl}}{{ post.url }}">{{ post.title }}</a></li>
 {% endif %}{% endfor %}
 </ul>
 {% endunless %}{% endfor %}
