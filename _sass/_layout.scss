@@ -75,6 +75,13 @@
 }
 
 // Colum
+.col-one {
+	position: relative;
+	box-sizing: border-box;
+	padding: 30px;
+	width: 1100px;
+	float: left;
+}
 .col-main {
 	position: relative;
 	box-sizing: border-box;
