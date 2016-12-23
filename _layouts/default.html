@@ -9,19 +9,13 @@
 
     <div class="page-content">
       <div class="wrapper">
-        {% if site.side_bar %}
         <div class="col-main">
           {{ content }}
         </div>
         <div class="col-second">
           {% include sidebar.html %}
         </div>
-        {% else %}
-        <div class="col-one">
-          {{ content }}
-        </div>
-        {% endif %}
-      </div>
+     </div>
     </div>
 
     {% include footer.html %}
