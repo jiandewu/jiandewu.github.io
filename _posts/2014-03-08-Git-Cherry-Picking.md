@@ -4,6 +4,7 @@ title: Git之Cherry-Picking用例
 tags:
 - Git
 categories: Technology
+public: true
 ---
 
 First of all, use `git log` to see exactly which commit you want to pick. An example:

@@ -4,6 +4,7 @@ title: “民科”的几大特点
 tags:
 - 民科
 categories: Featured
+public: true
 ---
 
 第一是人有多大胆，地有多高产，自己的某某东西一出，蕴含在宇宙中的问题就都会顺利解决。
