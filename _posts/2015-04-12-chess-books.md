@@ -1,8 +1,8 @@
 ---
 layout: post
 title: 优秀国际象棋书（入门）
-tags: Book, Chess
-categories: Child
+tags: Book, Chess, Child
+categories: Life
 public: true
 ---
 1. 《简明国际象棋教程》是前苏联教练罗曼·佩尔斯和列夫·阿尔贝特合著的。这是列夫·阿尔贝特编著的《全面的国际象棋教程》系列6册的教程的第一卷及第二卷.

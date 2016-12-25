@@ -1,8 +1,8 @@
 ---
 layout: post
 title: 孩子有以下特点会大有出息
-tags: 
-categories: Child
+tags: Child
+categories: Life
 public: true
 ---
 1. 自制力强的孩子
