@@ -18,7 +18,7 @@ public: true
 <h3 class="category" id="{{ word }}">{{ word | upcase }} ({{ site.categories[word].size }})</h3>
 <a name="{{ word }}"></a> 
 <ul>
-{% for post in site.categories[word] %}{% if post.title != null %}{% if page.public %}
+{% for post in site.categories[word] %}{% if post.title != null %}{% if post.public %}
 <li><span>{{ post.date | date: "%b %d, %Y" }}</span> » <a href="{{ site.baseurl}}{{ post.url }}">{{ post.title }}</a></li>
 {% endif %}{% endif %}{% endfor %}
 </ul>
