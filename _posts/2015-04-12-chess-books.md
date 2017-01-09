@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 优秀国际象棋书（入门）
-tags: Book, Chess, Child
+tags: Book Chess Child
 categories: Life
 public: true
 ---

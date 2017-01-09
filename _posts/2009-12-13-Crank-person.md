@@ -1,8 +1,7 @@
 ---
 layout: post
 title: “民科”的几大特点
-tags:
-- 民科
+tags: 民科
 categories: Featured
 public: true
 ---

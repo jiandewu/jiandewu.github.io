@@ -7,19 +7,12 @@
 
     {% include header.html %}
 
-    <div class="page-content">
-      <div class="wrapper">
-        <div class="col-main">
-          {{ content }}
-        </div>
-        <div class="col-second">
-          {% include sidebar.html %}
-        </div>
-      </div>
-    </div>
+        {{ content }}
 
     {% include footer.html %}
-
+    {% include backToTop.html %}
+    <script src="{{ " /js/main.js " | prepend: site.baseurl }}" charset="utf-8"></script>
+    <script src="{{ " /js/scroll.min.js " | prepend: site.baseurl }}" charset="utf-8"></script>
   </body>
 
 </html>

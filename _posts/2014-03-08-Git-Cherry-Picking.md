@@ -1,8 +1,7 @@
 ---
 layout: post
 title: Git之Cherry-Picking用例
-tags:
-- Git
+tags: Git
 categories: Technology
 public: true
 ---
