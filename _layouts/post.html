@@ -28,12 +28,15 @@ layout: default
             {% include tag.html %}
             </div>
 
+            <div class="label-card">
+            {% include jiathis.html %}
+            </div>
+
         </div>
         <hr>
         <article itemscope itemtype="http://schema.org/BlogPosting">
         {{content}}
         </article>
-        <hr>
 
         {% assign hasSimilar = '' %}
         {% for post in site.related_posts %}
