@@ -5,7 +5,18 @@ tags: Regex
 categories: Technology
 public: true
 ---
+
 ### 常用的正则表达式
+
+1. word sentence 替换为：'word' sentence
+<br/>find: ([^ ]*)( ) replace: '$1'
+<br/>Search explanation: Find every character that is not a 'space', up until we reach a 'space'. Capture the match for string to be quoted in one variable.
+
+1. 整行：CHRONB21 替换为：CHRONB21 = nullif(@CHRONB21,''),
+<br/>find: ^.+$ replace: $& = nullif\(@$&,''\),
+
+
+### 不常用的正则表达式
 
 1. 匹配以%开头的整行：`^%%*(\s|\S)*$`
 1. 匹配中文字符的正则表达式：`[\u4e00-\u9fa5]`

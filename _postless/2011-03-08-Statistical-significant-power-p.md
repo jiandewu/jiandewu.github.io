@@ -53,7 +53,14 @@ p值是Fisher先提出来的“显著性检验”理论体系中的概念：
 
 注意，在Fisher的这套体系里面不涉及备择假设Ha（alternative hypothesis）。
 
+##
+
+第二、关于P值的问题这里有一个观点，在茆诗松教授编著概率论和数理统计一书中说到，P值的定义为，在一次假设检验之中，利用观测值能够做出拒绝原假设的最小显著性水平。我觉得这句话是有道理的。将P值提出来，则在显著性的水平上面就可以直接进行显著性的检验，大大的提高了检验的效率；通过P值来判断显著性，虽然粗糙但是快捷，且并不与Neyman-Pearson假设检验相矛盾。若需要进一步的做判定，还是需要进行置信区间的估计。至于文章中提高的那位仁兄，做了两次试验发现P值的结果不一样，只能说明统计学的结论并不是绝对普世的，好比99%的把握与100%把握虽然只差了1%，但是性质的本质是有差别的。我见到过在一列将近100个的数据中，改动两个数据就能让数据的检验由显著变成不显著。所以严格来讲，P值的显著性并不是一锤定音的事情。
+
+拒绝域的选择一直是颇有争议的。最初Fisher的显著性检验，是不需要拒绝域的，因此也就没有type II error。后来Neyman-Pearson强调了拒绝域在用数学处理假设检验中的重要性。现在我们熟知的假设检验，实际上是这两种思想的融合：一方面一个合法的test只需要满足type I error小于alpha，一方面真正好用的test又需要type II error尽量小。注意type II error的定义是和拒绝域的选择直接相关的。
+
 ###相关阅读
 1. [Scientific method: Statistical errors](http://www.nature.com/news/scientific-method-statistical-errors-1.14700) 
 [//]: # ([译]http://www.guokr.com/article/438043/)
 1. [Confidence intervals are frequently misunderstood](https://link.zhihu.com/?target=https%3A//en.wikipedia.org/wiki/Confidence_interval%23Misunderstandings)
+2. [P值之死](http://mp.weixin.qq.com/s?__biz=MjM5MDEzNDAyNQ==&mid=200652178&idx=1&sn=ebcfde94db2998f2bcf0407232d5c7c7&scene=2&from=timeline&isappinstalled=0#rd)

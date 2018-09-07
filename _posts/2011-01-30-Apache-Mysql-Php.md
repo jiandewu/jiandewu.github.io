@@ -103,6 +103,16 @@ sudo service mysql restart
 
 This will disable ONLY_FULL_GROUP_BY for ALL users
 
+~~~
+mysql> SELECT @@secure_file_priv;
+~~~
+
+Disable secure-file-priv MySQL Ubuntu. Edit the file /etc/mysql/mysql.conf.d/mysqld.cnf and add the following line at the end:
+
+~~~
+secure_file_priv=""
+~~~
+
 ## Install PHP
 
 We're going to include some helper packages as well, so that PHP code can run under the Apache server and talk to our MySQL database:
