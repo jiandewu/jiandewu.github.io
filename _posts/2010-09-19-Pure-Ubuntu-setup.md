@@ -5,6 +5,7 @@ tags: Linux
 categories: Technology
 public: true
 ---
+
 ## Make Ubuntu to run without GUI
 
 You have to un-install the only display manager installed to your system. It would be lightdm display manager. so to remove it execute this command:
@@ -93,3 +94,12 @@ DropShare  /media/sf_DropShare  vboxsf  rw,uid=33,gid=33  0  0
 `/etc/fstab` needs to have TABS not single spaces between all of the entries
 
 In order for `/etc/fstab` to run correctly at boot time vboxsf kernel module needs to be loaded BEFORE it runs. So you need to add `vboxsf` on its own line in `/etc/modules`.
+
+## Resize a VirtualBox guest Linux VDI Disk
+
+1. Make a copy of the VDI file – just in case (“MyLinux.vdi” -> “MyLinuxCopy.vdi“)
+2. ```O:\>VBoxmanage modifyhd MyLinux.vdi --resize 102400```
+this will re-size the drive to 100 GB. Pick a value that suits you. Note, your vdi file will not change in size at this point.
+1. use GParted for this. Go to http://gparted.sourceforge.net/livecd.php and download a GParted Live on CD ISO file.
+2. Finally, boot your original “MyLinux” Virtual Machine and all should be in order, so that when you do a “df -k”
+
