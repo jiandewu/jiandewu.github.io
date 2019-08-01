@@ -1,0 +1,2 @@
+/*! K12Reader.com K12 Core - v1.0.0 - Generated: 20-07-2014 */
+jQuery(window).ready(function(a){"use strict";var b,c=a("dl.glossary div");a("ul.alphabet-list li a").click(function(){var d=a(this).parent().data("letter"),e=!1;b&&b.removeClass("active"),b=a(this),a(this).addClass("active"),c.hide(),a('dl.glossary div[data-letter="none"]').hide(),c.each(function(){var b=a(this).data("letter");b==d&&(a(this).fadeIn(222),e=!0)}),e||a('dl.glossary div[data-letter="none"]').fadeIn(222)})});
