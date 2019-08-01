@@ -1,0 +1,39 @@
+GS = GS || {};
+
+jQuery(function() {
+  var newsletterRequestBtn = jQuery(document).find('.js-common-core-newsletter'); 
+  newsletterRequestBtn.click(function(e){
+      GS.sendUpdates.signupAndGetNewsletter();
+      e.preventDefault();
+  });
+});
+
+GS.newsletterModal = GS.newsletterModal || (function() {
+
+  var createGSModal = function(el) {
+    jQuery(el).modal({
+      show: true,
+      backdrop: true,
+      keyboard: true
+    });
+  };
+
+  var setFooterNewsletterHandler = function() {
+    var newsletterLinkSelector = '.js-send-me-updates-button-footer';
+    var footer = jQuery(document).find('#footer');
+    footer.on('click', newsletterLinkSelector, function(e) {
+      GS.sendUpdates.signupAndGetNewsletter();
+      e.preventDefault();
+    });
+  };
+
+  var init = function() {
+    setFooterNewsletterHandler();
+  };
+
+  return {
+    init: init
+  }
+
+})();
+GS.newsletterModal.init();

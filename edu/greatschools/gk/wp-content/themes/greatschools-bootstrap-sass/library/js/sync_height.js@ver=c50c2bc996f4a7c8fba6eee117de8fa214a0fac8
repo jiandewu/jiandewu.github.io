@@ -1,0 +1,20 @@
+var GS = GS || {};
+GS.syncHeight = GS.syncHeight || (function() {
+  var syncHeights = function() {
+    var $elements = jQuery('.js-syncHeight');
+    var maxHeight = -1;
+    $elements.each(function() {
+      maxHeight = maxHeight > jQuery(this).height() ? maxHeight : jQuery(this).height();
+    });
+    $elements.each(function() {
+      jQuery(this).height(maxHeight);
+    });
+  };
+  return {
+    syncHeights: syncHeights
+  };
+})();
+
+jQuery(function(){
+  GS.syncHeight.syncHeights();
+});

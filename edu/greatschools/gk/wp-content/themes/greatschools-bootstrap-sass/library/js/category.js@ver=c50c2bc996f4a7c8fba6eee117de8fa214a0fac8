@@ -1,0 +1,31 @@
+GS = GS || {};
+GS.category = GS.category || {};
+
+jQuery(function ($) {
+
+    GS.category.filterByGrade = function () {
+        var selected_grade = jQuery('#js-grade-select').find('option:selected').val();
+        var grade_sections = jQuery('.js-grades-section');
+        if (selected_grade === "all grades") {
+            $.each(grade_sections,function(i,section){
+                $(section).show();
+            })
+        } else {
+            $.each(grade_sections, function (i, section) {
+                if ($(section).hasClass('js-' + selected_grade)) {
+                    $(section).show();
+                } else {
+                    $(section).hide();
+                }
+            })
+        }
+        jQuery("img").unveil(200);
+    };
+
+    var init = function () {
+        jQuery('#js-grade-select').change(GS.category.filterByGrade);
+    };
+    init();
+
+});
+

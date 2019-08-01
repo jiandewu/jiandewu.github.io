@@ -1,0 +1,88 @@
+(function ($) {
+  // basic regex email validation
+  //checking on php side
+
+  /* GK Modal Newsletter Sign Up Form Handlers */
+
+  var $elementEmailPageCache = {};
+  var allowPageSubmit = true;
+
+  var submitFormHandlerJoinNewsletterPage = function () {
+
+    if (!allowPageSubmit) {
+      //already processing
+      return false;
+    }
+    var $this = jQuery(this);
+
+    // stop submit while processing
+    allowPageSubmit = false;
+    $this.find('button[type="submit"]').prop('disabled', true);
+
+    //get the form values
+    function getLists(){
+      return $elementEmailPageCache.form.find("input[name='lists[]']:checked").map(function(){
+        return $(this).val();
+      }).get();
+    }
+
+    function getGrades(){
+      return  $elementEmailPageCache.form.find("input[name='grades[]']:checked").map(function(){
+        return $(this).val();
+      }).get();
+    }
+
+    function getEmail(){
+      return $elementEmailPageCache.emailAddress.val();
+    }
+
+    function getTheState(){
+      return $elementEmailPageCache.stateHidden.val();
+    }
+
+    var url = $this.attr('action');
+    var data = {
+      action: 'joinNewsletterPage',
+      email: getEmail(),
+      state: getTheState(),
+      lists: getLists(),
+      grade: getGrades()
+    };
+
+    jQuery.post(url, data)
+      .done(function(data) {
+        if(data == 'email format failed'){
+          $elementEmailPageCache.noEmail.removeClass('dn');
+        }
+        else {
+          if (data == 0) {
+            $elementEmailPageCache.connectFailure.removeClass('dn');
+          }
+
+          else {
+            window.location.href = $elementEmailPageCache.successRedirectTo.val();
+          }
+        }
+      })
+      .fail(function(data) {
+        $elementEmailPageCache.connectFailure.removeClass('dn');
+      })
+      .always(function(data) {
+        allowPageSubmit = true;
+        $this.find('button[type="submit"]').prop('disabled', false);
+
+      });
+
+    return false;
+  };
+
+  $elementEmailPageCache.topContainer = jQuery('#Newsletter-Signup-Page');
+  $elementEmailPageCache.form = $elementEmailPageCache.topContainer.find('.js-newsletterPageForm');
+  $elementEmailPageCache.emailAddress = $elementEmailPageCache.form.find('input[name="email"]');
+  $elementEmailPageCache.stateHidden = $elementEmailPageCache.form.find('input[name="state"]');
+  $elementEmailPageCache.successRedirectTo = $elementEmailPageCache.form.find('input[name="success-url"]');
+  $elementEmailPageCache.form.on('submit', submitFormHandlerJoinNewsletterPage);
+  $elementEmailPageCache.successNewsletter = $elementEmailPageCache.topContainer.find('.js-newsletterSuccess');
+  $elementEmailPageCache.noEmail = $elementEmailPageCache.topContainer.find('.js-noEmailTo');
+  $elementEmailPageCache.connectFailure = $elementEmailPageCache.topContainer.find('.js-connectFailure');
+})(jQuery);

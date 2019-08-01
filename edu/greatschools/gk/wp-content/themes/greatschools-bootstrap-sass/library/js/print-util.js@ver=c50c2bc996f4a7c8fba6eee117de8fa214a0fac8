@@ -1,0 +1,23 @@
+GS = GS || {};
+
+GS.printUtil = GS.printUtil || (function() {
+
+
+  var printButtonImageLoad = function() {
+    var printButton = jQuery('.js-printButton');
+    jQuery(printButton).click(function () {
+      window.print();
+      //jQuery("img").trigger("unveil", function () {
+      //    window.print();
+      //});
+    });
+  };
+  var init = function() {
+    printButtonImageLoad();
+  };
+
+  return {
+    init: init
+  };
+})();
+

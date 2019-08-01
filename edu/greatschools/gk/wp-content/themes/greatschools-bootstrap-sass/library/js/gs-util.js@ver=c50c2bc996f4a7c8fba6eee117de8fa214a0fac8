@@ -1,0 +1,51 @@
+GS = GS || {};
+
+GS.commonUtil = GS.commonUtil || (function() {
+    var toolboxSelectorHandler = function() {
+        var toolboxSelector = '.js-toolboxSelect';
+        jQuery(toolboxSelector).click(function() {
+            if (!jQuery(this).hasClass('active')) {
+                jQuery('.js-toolboxSelect[data-toolbox-group='+jQuery(this).data('toolbox-group')+']').removeClass('active');
+                jQuery(this).addClass('active');
+                revealToolbox(jQuery(this).data('toolbox'),jQuery(this).data('toolbox-group'));
+
+            }
+        });
+    };
+
+    var revealToolbox = function(toolbox,toolboxGroup) {
+        var toolboxes = jQuery('.js-toolbox[data-toolbox-group='+toolboxGroup+']');
+        var thisToolbox = jQuery('#' + toolbox);
+        toolboxes.addClass('dn');
+        thisToolbox.removeClass('dn');
+    };
+
+    var toolboxSelectorMobileHandler = function() {
+        var toolboxSelector = '.js-toolboxSelectMobile';
+        jQuery(toolboxSelector).change(function() {
+            revealToolbox(jQuery(toolboxSelector).val());
+        });
+    };
+
+    //var shorten = function() {
+    //  if (jQuery('.visible-xs.js-breakpoint').is(':visible')) {
+    //    jQuery('.js-more').shorten({
+    //      'showChars': 250,
+    //      'moreText': gs_translate.view_more,
+    //      'lessText': gs_translate.view_less
+    //    });
+    //    jQuery('.morelink').closest('div').css('display', 'inline');
+    //  }
+    //};
+
+    var init = function() {
+        toolboxSelectorHandler();
+        toolboxSelectorMobileHandler();
+        //shorten();
+    };
+
+    return {
+        init: init
+    };
+})();
+

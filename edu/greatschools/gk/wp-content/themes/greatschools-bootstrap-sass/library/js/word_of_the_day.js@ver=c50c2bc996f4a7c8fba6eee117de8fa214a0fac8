@@ -1,0 +1,138 @@
+(function ($) {
+
+    var baseUrl = (function () {
+      return location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '') + '/gk';
+    })();
+
+    var adminAjaxUrl = (function () {
+      return baseUrl + '/wp-admin/admin-ajax.php';
+    })();
+
+    var wordOfTheDay = function() {
+      var wordOfTheDayModalId = "#Text-Message-Signup-Modal"
+
+      var wordOfTheDayValidator = (function() {
+        var self = this;
+
+        this.is_valid_cell = function(input) {
+          //or 11 digits
+          return input.length == 10
+        }
+
+        this.is_valid_email = function(input) {
+          if (input.length === 0) {
+            return true
+          } else {
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(input);
+          }
+        }
+
+        this.is_valid_grade = function(input) {
+          return /[0-9]+(,[0-9])*/.test(input)
+        }
+
+        this.is_valid_language = function(input) {
+          return /(^es$)|(^en$)|(^es,en$)|(^en,es$)/.test(input)
+        }
+
+        return {
+          validateFormValues: function(formValues) {
+            for (var i = 0; i < formValues.length; i++) {
+              var element = formValues[i]
+              var value = element.value
+              var name = element.name
+              var is_valid = self['is_valid_' + name](value)
+
+              if (!is_valid) { return {error_name: name} }
+            }
+            return {}
+          },
+
+          processFormValues: function(formValues) {
+            var cell     = { name: 'cell', value: '' };
+            var email    = { name: 'email', value: '' };
+            var grade    = { name: 'grade', value: [] };
+            var language = { name: 'language', value: [] };
+
+            for (var i = 0; i < formValues.length; i++) {
+              var element = formValues[i]
+              var value = element.value
+              var name = element.name
+
+              if (name == 'cell') {
+                cell['value'] = value.replace(/\D/g,'');
+              } else if (name == 'email') {
+                email['value'] = value;
+              } else if (name == 'grade') {
+                grade.value.push(value)
+              } else if (name == 'language') {
+                language.value.push(value)
+              }
+            }
+            grade.value = grade.value.join()
+            language.value = language.value.join()
+
+            return [cell, email, grade, language];
+          }
+        }
+      })()
+
+
+      $('.js-textMessageSignup').on('click', function() {
+        $(wordOfTheDayModalId).modal({
+          show: true,
+          backdrop: true,
+          keyboard: true
+        });
+      });
+
+      $("#word-of-the-day-grade-select").multiselect();
+      $("#word-of-the-day-language-select").multiselect();
+
+      $(".js-submit").on("click", function() {
+        var formName    = $(this).data('form-name');
+        var $form       = $('#' + formName);
+        var formValues  = wordOfTheDayValidator.processFormValues($form.serializeArray());
+        var errorObject = wordOfTheDayValidator.validateFormValues(formValues);
+
+        if (errorObject['error_name'] != undefined) {
+          $('.js-wordOfTheDayError').addClass('dn');
+          $('.js-' + errorObject['error_name'] + 'Error').removeClass('dn');
+        } else {
+          var data = {
+            action:    'smsSignUpDW',
+            cell:      formValues['cell'],
+            email:     formValues['email'],
+            grade:     formValues['grade'],
+            language:  formValues['language'],
+          }
+
+          jQuery.post(adminAjaxUrl, data).success(function(data) {
+            $('.js-wordOfTheDaySuccess').removeClass('dn')
+            setTimeout(function() {
+              $(wordOfTheDayModalId).modal('toggle');
+              clearAllFields($form);
+            }, 2000);
+          });
+        }
+      });
+
+      $('.js-wordOfTheDayClose').on('click', function() {
+        clearAllFields($('#word-of-the-day'))
+      })
+
+      var clearAllFields = function($form) {
+        $('.js-wordOfTheDaySuccess').addClass('dn')
+        $form.find("input[type=text]").val("");
+        $("#word-of-the-day-grade-select").multiselect('deselectAll', false);
+        $("#word-of-the-day-grade-select").multiselect('refresh');
+        $("#word-of-the-day-language-select").multiselect('deselectAll', false);
+        $("#word-of-the-day-language-select").multiselect('refresh');
+      }
+
+    };
+
+    wordOfTheDay();
+
+})(jQuery);

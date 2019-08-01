@@ -1,0 +1,7 @@
+(function ($) {
+  $('.js-bookListTopic').on('click', function() {
+    var self = $(this);
+    var bookListsGrade = self.find('.js-bookListTopicGrades')[0];
+   $(bookListsGrade).slideToggle(400);
+  })
+})(jQuery);

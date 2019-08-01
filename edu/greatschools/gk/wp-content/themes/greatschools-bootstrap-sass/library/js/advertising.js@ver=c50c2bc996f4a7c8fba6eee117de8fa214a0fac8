@@ -1,0 +1,5 @@
+var GS = GS || {};
+GS.ad = GS.ad || {};
+if (typeof(pjs.adTargetingAttributes) !== 'undefined') {
+  GS.ad.adSetTargeting = pjs.adTargetingAttributes || {};
+}

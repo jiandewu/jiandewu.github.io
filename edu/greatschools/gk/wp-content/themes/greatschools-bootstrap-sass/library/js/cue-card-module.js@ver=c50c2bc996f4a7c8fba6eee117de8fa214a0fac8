@@ -1,0 +1,12 @@
+(function ($) {
+  $('.js-cueCardModuleSubmit').on('click', function() {
+     var buttonContainer = '.js-cueCardModuleButton';
+     var selectpicker    = '.selectpicker';
+     var $selectpicker   = $(this).closest(buttonContainer).find(selectpicker);
+     var value           = $selectpicker.selectpicker('val');
+
+    if (typeof(value) === 'string' && value !== "") {
+      window.location = value;
+    }
+  });
+})(jQuery);

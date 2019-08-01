@@ -1,0 +1,100 @@
+(function ($) {
+  // basic regex email validation
+  //checking on php side
+  var validateEmail = function(email) {
+    //var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+    //return re.test(email);
+    return true;
+  }
+
+  /* GK Modal Newsletter Sign Up Form Handlers */
+
+  var $elementEmailCache = {};
+  var allowSubmit = true;
+
+  var submitFormHandlerJoinNewsletter = function () {
+    if (!allowSubmit) {
+      //already processing
+      return false;
+    }
+    var $this = jQuery(this);
+
+    // stop submit while processing
+    allowSubmit = false;
+    $this.find('button[type="submit"]').prop('disabled', true);
+    $elementEmailCache.noEmail.addClass('dn');
+    $elementEmailCache.successNewsletter.addClass('dn');
+
+    //get the form values
+    var emailAddress = $elementEmailCache.emailAddress.val();
+
+    if( !validateEmail(emailAddress) ){
+      //email misformed
+      //show error and bail
+      allowSubmit = true;
+      $this.find('button[type="submit"]').prop('disabled', false);
+      $elementEmailCache.noEmail.removeClass('dn');
+      return false;
+    }
+
+    var stateSelected = $elementEmailCache.stateHidden.val();
+
+    var gradeSelectedArray = $elementEmailCache.grades.find("input:checkbox:checked").map(function(){
+      return $(this).val();
+    }).get();
+
+    var url = $this.attr('action');
+    var data = {
+      action: 'joinNewsletter',
+      email: emailAddress,
+      state: stateSelected,
+      grade: gradeSelectedArray
+    };
+
+    jQuery.post(url, data)
+      .done(function(data) {
+        if(data == 'email format failed'){
+          $elementEmailCache.noEmail.removeClass('dn');
+        }
+        else {
+          $elementEmailCache.successNewsletter.removeClass('dn');
+          setTimeout(hideModalNewsletter, 2000);
+
+        }
+
+      })
+      .fail(function(data) {
+        $elementEmailCache.connectFailure.removeClass('dn');
+      })
+      .always(function(data) {
+        allowSubmit = true;
+        $this.find('button[type="submit"]').prop('disabled', false);
+
+      });
+    function hideModalNewsletter(){
+      $elementEmailCache.topContainer.modal('toggle');
+      clearAllFields();
+    }
+    function clearAllFields(){
+      $elementEmailCache.noEmail.addClass('dn');
+      $elementEmailCache.successNewsletter.addClass('dn');
+      $elementEmailCache.emailAddress.val('');
+      $elementEmailCache.grades.find('label').removeClass('active')
+      $elementEmailCache.grades.find("input:checkbox:checked").each(function () { $(this).prop('checked', false) });
+    }
+    // currently waiting for done/always to reenable the submit button.
+    // need to hide the modal on success.  or possibly on submit.
+
+    return false;
+  };
+
+  $elementEmailCache.topContainer = jQuery('#Common-Core-Newsletter-Signup-Modal');
+  $elementEmailCache.successNewsletter = $elementEmailCache.topContainer.find('.js-newsletterSuccess');
+  $elementEmailCache.emailAddress = $elementEmailCache.topContainer.find('input[name="email"]');
+  $elementEmailCache.stateHidden = $elementEmailCache.topContainer.find('input[name="state"]');
+  $elementEmailCache.noEmail = $elementEmailCache.topContainer.find('.js-noEmailTo');
+  $elementEmailCache.connectFailure = $elementEmailCache.topContainer.find('.js-connectFailure');
+  $elementEmailCache.grades = $elementEmailCache.topContainer.find(".js-newsletterGradesContainer");
+  $elementEmailCache.form = $elementEmailCache.topContainer.find('.js-newsletterForm');
+  $elementEmailCache.form.on('submit', submitFormHandlerJoinNewsletter);
+})(jQuery);

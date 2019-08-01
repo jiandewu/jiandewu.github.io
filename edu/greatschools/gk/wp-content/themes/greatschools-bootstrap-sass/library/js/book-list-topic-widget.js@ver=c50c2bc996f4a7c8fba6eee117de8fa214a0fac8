@@ -1,0 +1,91 @@
+
+(function ($) {
+
+  var gradeSelector = '.js-bookListGradeSelect select';
+  var bookListTopicSelector = '.js-bookListTopicSelect select';
+  var bookListTopicSelectContainer = '.js-bookListTopicSelect';
+  var bookListWidgetFormSelector = '.js-bookListForm';
+  var bookListWidgetSubmitButtonSelector = '.js-bookListForm .submit button';
+  var bookListTopicErrorContainer = '.js-nobookListTopicErrorContainer';
+
+  var baseUrl = (function () {
+    return location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '') + '/gk';
+  })();
+
+  var adminAjaxUrl = (function () {
+    return baseUrl + '/wp-admin/admin-ajax.php';
+  })();
+
+  var fetchBookListTopics = function(self, grade) {
+    var data = {
+      action: 'bookListTopics',
+      grade: grade
+    };
+    jQuery.get(adminAjaxUrl, data).success(function(data) {
+      var bookListPicker = $(bookListTopicSelector);
+      var bookListTopics = JSON.parse(data);
+      var filteredTopics = filterOutBookListTopicsWithNoUrl(bookListTopics);
+      if ( filteredTopics.length > 0 ) {
+        clearBookListSelectOptions();
+        buildBookListTopicOptions(filteredTopics);
+        $(bookListTopicSelectContainer).show();
+        enableSubmitButton();
+        $(bookListPicker).selectpicker('refresh');
+      } else {
+       $(bookListTopicSelectContainer).hide();
+       $(bookListTopicErrorContainer).show();
+      }
+    });
+  };
+
+  var filterOutBookListTopicsWithNoUrl = function (bookListTopics) {
+   function hasUrl(topic) {
+     return topic.hasOwnProperty('book_list_url');
+   }
+    return bookListTopics.filter(hasUrl);
+  };
+
+  var buildBookListTopicOptions = function (data) {
+    var bookListPicker = $(bookListTopicSelector);
+    data.forEach(function(bookList) {
+      if ( bookList.book_list_url ) {
+        $(bookListPicker).append('<option value="'+bookList.book_list_url+'">'+bookList.name+'</option>');
+      }
+    })
+  };
+
+  var clearBookListSelectOptions = function() {
+    $(bookListTopicSelector).find('option').remove();
+  };
+
+  var enableSubmitButton = function() {
+   $(bookListWidgetSubmitButtonSelector).prop('disabled',false);
+  };
+
+  var disableSubmitButton = function() {
+    $(bookListWidgetSubmitButtonSelector).prop('disabled',true);
+  };
+
+  var gradeSelectHandler = function() {
+    var self = $(this);
+    var gradeSelected = self.val();
+    disableSubmitButton();
+    $(bookListTopicErrorContainer).hide();
+    if (gradeSelected != '') {
+      fetchBookListTopics(self, gradeSelected);
+    } else {
+      $(bookListTopicSelectContainer).hide();
+    }
+  };
+
+  $(gradeSelector).on('change', gradeSelectHandler);
+
+  $(bookListWidgetFormSelector).on('submit', function (e) {
+    e.preventDefault();
+    disableSubmitButton();
+    var bookListPicker = $(bookListTopicSelector);
+    window.location.href = $(bookListPicker).val();
+  });
+
+})(jQuery);
+/* End Book List Topic Widget Form Handlers */
