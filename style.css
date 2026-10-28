@@ -40,6 +40,10 @@ a:hover { text-decoration: underline; }
 .hero h1 { margin: 0 0 6px; font-size: 2.1rem; letter-spacing: -0.01em; }
 .role { margin: 0 0 16px; color: var(--muted); font-size: 1rem; line-height: 1.5; }
 .links { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 0.95rem; }
+.links a, .topbar a { display: inline-flex; align-items: center; gap: 6px; }
+.icon { width: 1.05em; height: 1.05em; flex: none; fill: currentColor; transition: color 0.15s; }
+.icon.stroke { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.links a:hover .icon, .topbar a:hover .icon { color: var(--brand, currentColor); }
 
 section { padding: 28px 0 8px; }
 h2 {
