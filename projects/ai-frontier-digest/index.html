@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Frontier Digest · Jiande Wu</title>
+<meta name="description" content="Case study: an unattended LLM pipeline that turns AI news into a short daily Chinese digest.">
+<link rel="stylesheet" href="../../style.css">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="canonical" href="https://jiande.is-a.si/projects/ai-frontier-digest/">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://jiande.is-a.si/projects/ai-frontier-digest/">
+<meta property="og:title" content="AI Frontier Digest — case study">
+<meta property="og:description" content="An unattended LLM pipeline that turns AI news into a short daily Chinese digest.">
+<meta property="og:image" content="https://jiande.is-a.si/avatar.jpg">
+<meta name="twitter:card" content="summary">
+</head>
+<body>
+<header class="wrap topbar">
+  <a href="../../">Jiande Wu</a>
+  <nav>
+    <a href="../../#projects">Projects</a>
+    <a href="../../Jiande_Wu_CV.pdf">CV</a>
+  </nav>
+</header>
+
+<main class="wrap article">
+  <h1>AI Frontier Digest</h1>
+  <p class="lede">An unattended LLM pipeline that turns AI news into a short daily digest in Chinese.</p>
+  <p class="more"><a href="../../ai-frontier-digest/">Live site</a> ·
+    <a href="https://github.com/jiandewu/ai-frontier-digest">Code</a> ·
+    <a href="../../ai-frontier-digest/feed.xml">RSS</a> ·
+    Python (standard library only) · Gemini API · GitHub Actions</p>
+
+  <section>
+    <h2>Problem</h2>
+    <p>Keeping up with AI research and industry news means reading dozens of
+      blogs, lab announcements, Hacker News, and paper feeds, most of it in
+      English and much of it repeating the same event. The goal was a digest for
+      readers with a science or engineering background who are not specialists:
+      at most ten items a day, the ones most worth reading, each explained in
+      plain Chinese, with no manual curation.</p>
+  </section>
+
+  <section>
+    <h2>Pipeline</h2>
+    <p>A scheduled GitHub Actions job runs every four hours. Each run:</p>
+    <ol>
+      <li><b>Collects</b> from 31 researcher, lab, and news RSS/Atom feeds,
+        the Hacker News front page (200+ points, AI-related titles), and
+        Hugging Face Daily Papers (100+ upvotes).</li>
+      <li><b>Filters</b> to unseen items from the last three days. Items are
+        keyed by a hash of the normalized link; undated items are skipped and
+        future dates are clamped to the run time.</li>
+      <li><b>Summarizes</b> new items in batches of 15: the LLM writes a Chinese
+        title, a one- or two-sentence summary, a category, and a 1–5
+        importance rating.</li>
+      <li><b>Groups</b> items from the last two days that report the same
+        event, such as one model release covered by a lab blog, a newsletter,
+        and Hacker News.</li>
+      <li><b>Picks</b> the daily list: a rating of 3 or more, at most two items
+        per source, one item per event, and at most ten per day.</li>
+      <li><b>Explains</b> each pick from the article's full text in three or
+        four sentences; when the page cannot be read, the short summary
+        stays.</li>
+      <li><b>Publishes</b> the daily pages, the README, and an RSS feed as a
+        commit; GitHub Pages serves the site.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Design decisions</h2>
+
+    <h3>Structured output with a fallback, then validate anyway</h3>
+    <p>Every LLM call sends a per-batch JSON Schema in which item IDs and
+      categories are enums, so the model can only refer to items it was given.
+      The API sometimes rejects these enum-heavy schemas; on that error the
+      call retries in plain JSON mode with the format spelled out in the
+      prompt. Either way, every field is re-validated locally: unknown IDs are
+      dropped, an invalid category gets a default, and an out-of-range rating
+      is replaced.</p>
+
+    <h3>Failures retry on the next run instead of being lost</h3>
+    <p>Items are stored only after they are summarized. If a batch fails,
+      its items stay unseen and the next run, four hours later, picks them up
+      again. Transient HTTP errors (429 and 5xx) are retried with backoff
+      within a run.</p>
+
+    <h3>Keep raw model ratings; rank at render time</h3>
+    <p>The CSV store keeps the model's raw rating. Ranking rules are applied
+      when pages are rendered: one extra star for long-form posts by
+      individual researchers, one for events covered by two or more sources,
+      capped at five. Because the raw data never changes, the rules can be
+      tuned without calling the model again.</p>
+
+    <h3>One report per event</h3>
+    <p>Grouping lets the digest show each event once. The highest-rated
+      report wins, and on ties the earliest one, which is usually the
+      original source. The other reports are listed under it as "see also."
+      Coverage by several sources is itself a signal and raises the
+      rating.</p>
+
+    <h3>Article text is untrusted input</h3>
+    <p>Full-text explanations pass scraped article text to the model. The
+      prompt states that any instruction inside the text is content to be
+      summarized, not followed. Extraction keeps the longest
+      <code>&lt;article&gt;</code>, <code>&lt;main&gt;</code>, or
+      <code>&lt;body&gt;</code> block, capped at 8,000 characters. Pages that
+      yield fewer than 500 characters, usually paywalls or JavaScript-only
+      pages, are treated as unreadable. Hugging Face papers use the API
+      abstract instead.</p>
+
+    <h3>Boring infrastructure</h3>
+    <p>The pipeline uses only the Python standard library. The data store is
+      a CSV per month in the repository, so every change shows up in a
+      readable diff. Output is deterministic, so a run with nothing new
+      produces no commit. Unit tests run before every update, and a monthly
+      job fails when a feed is dead or has not updated for a year.</p>
+  </section>
+
+  <section>
+    <h2>Limitations and next steps</h2>
+    <ul>
+      <li>The importance ratings and event groups have not been evaluated
+        against human judgment. The next step is a small labeled set to measure
+        rating agreement and grouping precision and recall.</li>
+      <li>Some labs publish no RSS feed. Their feeds come from a third-party
+        project that scrapes the lab websites, so they can break when a site is
+        redesigned; the monthly check catches this.</li>
+      <li>The project started in October 2026. Daily volume is not yet stable
+        enough to report.</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="wrap">
+  <p>© 2026 Jiande Wu</p>
+</footer>
+<script data-goatcounter="https://jiande.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>
