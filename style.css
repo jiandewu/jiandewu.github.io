@@ -75,7 +75,7 @@ h2 {
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
 }
 .card {
-  display: flex; flex-direction: column;
+  position: relative; display: flex; flex-direction: column;
   padding: 16px; border: 1px solid var(--line); border-radius: 8px;
   background: var(--card); color: var(--fg);
 }
@@ -99,7 +99,10 @@ footer { padding: 32px 16px 48px; color: var(--muted); font-size: 0.85rem; }
 
 .group { font-size: 1rem; margin: 20px 0 10px; }
 .card h3 a { color: inherit; }
-.tag a { color: var(--accent); }
+/* Cards with several links: the title link covers the whole card, the tag links stay on top. */
+.card h3 a::after { content: ""; position: absolute; inset: 0; border-radius: 8px; }
+.card h3 a:hover { text-decoration: none; }
+.tag a { position: relative; z-index: 1; color: var(--accent); }
 .compact { margin: 0; padding-left: 1.2em; font-size: 0.95rem; }
 .compact li { margin-bottom: 6px; }
 
