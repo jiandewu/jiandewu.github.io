@@ -4,41 +4,78 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Jiande Wu</title>
-<meta name="description" content="Jiande Wu — public health data science and infectious disease forecasting at Clemson University.">
+<meta name="description" content="Jiande Wu — applied machine learning and LLM systems for public health data at Clemson University.">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header class="wrap hero">
   <h1>Jiande Wu, Ph.D.</h1>
-  <p class="role">Data Manager / Data Scientist<br>
+  <p class="role">Data Scientist — applied machine learning and LLM systems for public health data<br>
     Center for Public Health Modeling and Response, Clemson University</p>
   <nav class="links">
+    <a href="Jiande_Wu_CV.pdf">CV (PDF)</a>
     <a href="https://scholar.google.com/citations?user=VwRAV8kAAAAJ&amp;hl=en">Google Scholar</a>
     <a href="https://orcid.org/0000-0002-9357-2977">ORCID</a>
     <a href="https://github.com/jiandewu">GitHub</a>
     <a href="https://www.linkedin.com/in/jiandewu/">LinkedIn</a>
+    <a href="zh/" lang="zh-CN">中文</a>
   </nav>
 </header>
 
 <main class="wrap">
   <section id="about">
     <h2>About</h2>
-    <p>I work on public health data and infectious disease forecasting at the
-      Center for Public Health Modeling and Response (CPHMR), Clemson University.
-      My current focus is forecasting respiratory hospitalizations (COVID-19,
-      influenza, RSV) from CDC surveillance data while accounting for reporting
-      gaps and data-quality variation.</p>
-    <p>From 2017 to 2023 I was a Senior Bioinformatics Specialist at LSU Health
-      Sciences Center, building reproducible workflows for RNA-seq, DNA
-      methylation, and single-cell analyses of cancer cohorts. I earned my
-      Ph.D. in Electrical Engineering at the University of New Orleans, where I
-      worked on parallel and GPU-accelerated particle filtering for target
-      tracking.</p>
+    <p>I build machine learning and LLM systems on messy real-world data. At the
+      Center for Public Health Modeling and Response (CPHMR), Clemson University,
+      I manage multi-source EHR and CDC surveillance data and forecast
+      respiratory hospitalizations (COVID-19, influenza, RSV); my
+      transformer-based multi-source forecasting work is published in
+      <i>Epidemics</i> (2025). I also build LLM and agent tooling for research
+      workflows: reliability-aware MCP tools over surveillance data, evaluated
+      document retrieval, and automated LLM pipelines that run unattended.</p>
+    <p>Before that I spent nearly six years at LSU Health Sciences Center building
+      reproducible RNA-seq, DNA methylation, and single-cell workflows, and
+      earned a Ph.D. in Electrical Engineering at the University of New Orleans
+      on GPU and cluster parallel particle filtering.</p>
+  </section>
+
+  <section id="now">
+    <h2>Now</h2>
+    <p>2026-10: Observation-aware forecasting of respiratory hospitalizations,
+      and LLM tools for surveillance data (<a href="https://github.com/jiandewu/resplens">resplens</a>).</p>
   </section>
 
   <section id="projects">
     <h2>Projects</h2>
+
+    <h3 class="group">AI and LLM systems</h3>
     <div class="cards">
+      <a class="card" href="https://github.com/jiandewu/resplens">
+        <h3>resplens</h3>
+        <p>Reliability-aware AI toolkit for US respiratory surveillance data,
+          with MCP tools and evaluated document retrieval.</p>
+        <span class="tag">Python · LLM / MCP</span>
+      </a>
+      <div class="card">
+        <h3><a href="ai-frontier-digest/">AI Frontier Digest</a></h3>
+        <p>Automated daily AI-news digest (in Chinese). Collects 31 researcher,
+          lab, and news feeds plus Hacker News and Hugging Face Daily Papers; an
+          LLM summarizes, scores importance, and groups items covering the same
+          event; selected items get full-text explanations. GitHub Actions
+          publishes every 4 hours.</p>
+        <span class="tag"><a href="ai-frontier-digest/">Site</a> · <a href="https://github.com/jiandewu/ai-frontier-digest">Code</a> · Python · Gemini</span>
+      </div>
+    </div>
+
+    <h3 class="group">Public health data and forecasting</h3>
+    <div class="cards">
+      <div class="card">
+        <h3><a href="https://github.com/DMA-PRIME/covid-transformer-multisource">Multi-source transformer forecasting</a></h3>
+        <p>Transformer model fusing multiple data sources for county-level
+          COVID-19 case and death forecasting, evaluated retrospectively across
+          46 South Carolina counties and three Omicron waves.</p>
+        <span class="tag"><a href="https://doi.org/10.1016/j.epidem.2025.100865">Paper</a> · <a href="https://github.com/DMA-PRIME/covid-transformer-multisource">Code</a> · PyTorch</span>
+      </div>
       <a class="card" href="https://github.com/DMA-PRIME/ObsAwareData">
         <h3>ObsAwareData</h3>
         <p>Weekly COVID-19, influenza, and RSV surveillance data for the 50 US
@@ -52,31 +89,20 @@
           ObsAwareData.</p>
         <span class="tag">Python</span>
       </a>
-      <a class="card" href="https://github.com/jiandewu/tcga-brca-analysis">
-        <h3>TCGA breast cancer analyses</h3>
-        <p>RNA-seq, miRNA, and DNA methylation analyses of TCGA breast cancer,
-          focused on triple-negative breast cancer.</p>
-        <span class="tag">R · Bioinformatics</span>
-      </a>
-      <a class="card" href="https://github.com/jiandewu/pancancer-methylation">
-        <h3>Pan-cancer methylation</h3>
-        <p>DNA methylation workflows (DMP, DMR, survival) across TCGA BRCA,
-          COAD, LUAD, and PRAD.</p>
-        <span class="tag">R · Bioinformatics</span>
-      </a>
-      <a class="card" href="https://github.com/jiandewu/star-jum-splicing-workflow">
-        <h3>STAR + JUM splicing workflow</h3>
-        <p>Configurable two-pass STAR and JUM workflow for RNA-seq alternative
-          splicing analysis.</p>
-        <span class="tag">Shell · Workflow</span>
-      </a>
-      <a class="card" href="https://github.com/jiandewu/resplens">
-        <h3>resplens</h3>
-        <p>Reliability-aware AI toolkit for US respiratory surveillance data,
-          with MCP tools and evaluated document retrieval.</p>
-        <span class="tag">Python · AI / MCP</span>
-      </a>
     </div>
+
+    <h3 class="group">Bioinformatics</h3>
+    <ul class="compact">
+      <li><a href="https://github.com/jiandewu/tcga-brca-analysis">TCGA breast cancer analyses</a> —
+        RNA-seq, miRNA, and DNA methylation analyses of TCGA breast cancer,
+        focused on triple-negative breast cancer.</li>
+      <li><a href="https://github.com/jiandewu/pancancer-methylation">Pan-cancer methylation</a> —
+        DNA methylation workflows (DMP, DMR, survival) across TCGA BRCA, COAD,
+        LUAD, and PRAD.</li>
+      <li><a href="https://github.com/jiandewu/star-jum-splicing-workflow">STAR + JUM splicing workflow</a> —
+        configurable two-pass STAR and JUM workflow for RNA-seq alternative
+        splicing analysis.</li>
+    </ul>
     <p class="more">More on <a href="https://github.com/jiandewu?tab=repositories">GitHub</a>.</p>
   </section>
 
