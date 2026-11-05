@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Jiande Wu · 中文</title>
-<meta name="description" content="Jiande Wu 的中文页面：AI 前沿导读。">
+<meta name="description" content="Jiande Wu 的中文页面：AI 前沿导读、美股公告与要闻。">
 <link rel="stylesheet" href="../style.css">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
@@ -19,6 +19,7 @@
 <meta name="twitter:card" content="summary">
 </head>
 <body>
+<div class="wrap"><img class="banner" src="banner.svg" alt="" width="1200" height="360"></div>
 <header class="wrap hero">
   <img class="avatar" src="../avatar.jpg" alt="Jiande Wu" width="112" height="112">
   <div>
@@ -33,23 +34,28 @@
 
 <main class="wrap">
   <section id="about">
-    <h2>关于</h2>
+    <h2>👋 关于</h2>
     <p>我在 Clemson University 做公共卫生数据管理和呼吸道传染病（COVID-19、流感、RSV）预测，
       也在做 LLM 与 AI agent 在研究工作流中的应用。此前做过多年生物信息学分析，博士阶段研究并行计算与粒子滤波。
       工作和学术内容见<a href="../">英文主页</a>。</p>
   </section>
 
-  <section id="digest">
-    <h2>AI 前沿导读</h2>
+  <section id="projects">
+    <h2>🛠️ 小项目</h2>
     <div class="cards">
-      <a class="card" href="../ai-frontier-digest/">
-        <h3>AI 前沿导读</h3>
+      <div class="card c-orange">
+        <h3><a href="../ai-frontier-digest/">🤖 AI 前沿导读</a></h3>
         <p>每天从研究者博客、实验室新闻、Hacker News 和 Hugging Face 热门论文中精选 10 条以内，
           附中文科普解释。</p>
-        <span class="tag">每日更新 · LLM 自动摘要</span>
-      </a>
+        <span class="tag">每日更新 · LLM 自动摘要 · <a href="https://github.com/jiandewu/ai-frontier-digest">源码</a></span>
+      </div>
+      <div class="card c-teal">
+        <h3><a href="../us-market/">📈 美股公告与要闻</a></h3>
+        <p>大盘股和关注股票的 SEC 公告、内部人交易，FRED 宏观数据，
+          以及每天 5 条美股要闻的中文摘要和宏观解读。</p>
+        <span class="tag">每日更新 · SEC EDGAR · FRED · LLM 摘要</span>
+      </div>
     </div>
-    <p class="more">流水线源码见 <a href="https://github.com/jiandewu/ai-frontier-digest">GitHub</a>。</p>
   </section>
 </main>
 

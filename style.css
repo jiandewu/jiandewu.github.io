@@ -112,3 +112,46 @@ footer { padding: 32px 16px 48px; color: var(--muted); font-size: 0.85rem; }
 .tag a { position: relative; z-index: 1; color: var(--accent); }
 .compact { margin: 0; padding-left: 1.2em; font-size: 0.95rem; }
 .compact li { margin-bottom: 6px; }
+
+/* Chinese pages (zh/ and the digest site): warmer, more casual theme. */
+html[lang="zh-CN"] {
+  --bg: #fdf8f1;
+  --fg: #2b2420;
+  --muted: #6f645b;
+  --accent: #c2410c;
+  --line: #efe1cf;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  html[lang="zh-CN"] {
+    --bg: #1a1714;
+    --fg: #ece6df;
+    --muted: #a89d92;
+    --accent: #fb923c;
+    --line: #3a322b;
+    --card: #231f1b;
+  }
+}
+html[lang="zh-CN"] h2 {
+  font-size: 1.15rem; text-transform: none; letter-spacing: 0; color: var(--fg);
+}
+html[lang="zh-CN"] .card {
+  border-radius: 14px; border-top: 4px solid var(--c, var(--accent));
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+html[lang="zh-CN"] .card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgb(0 0 0 / 0.08); }
+html[lang="zh-CN"] .card h3 { color: var(--c, var(--accent)); }
+.c-orange { --c: #c2410c; }
+.c-teal { --c: #0f766e; }
+@media (prefers-color-scheme: dark) {
+  .c-orange { --c: #fb923c; }
+  .c-teal { --c: #2dd4bf; }
+}
+.banner {
+  display: block; width: 100%; height: auto; aspect-ratio: 10 / 3; object-fit: cover;
+  margin-top: 20px; border-radius: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  .banner { filter: brightness(0.82); }
+}
+html[lang="zh-CN"] .hero { padding-top: 24px; }
