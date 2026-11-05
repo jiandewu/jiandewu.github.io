@@ -143,8 +143,10 @@ html[lang="zh-CN"] .card:hover { transform: translateY(-2px); box-shadow: 0 6px 
 html[lang="zh-CN"] .card h3 { color: var(--c, var(--accent)); }
 .c-orange { --c: #c2410c; }
 .c-teal { --c: #0f766e; }
+.c-blue { --c: #1d4ed8; }
 @media (prefers-color-scheme: dark) {
   .c-orange { --c: #fb923c; }
+  .c-blue { --c: #60a5fa; }
   .c-teal { --c: #2dd4bf; }
 }
 .masthead { position: relative; margin-top: 20px; border-radius: 14px; overflow: hidden; }
@@ -160,6 +162,7 @@ html[lang="zh-CN"] .card h3 { color: var(--c, var(--accent)); }
 }
 .masthead-text h1 { margin: 0; font-size: 1.6rem; line-height: 1.3; }
 .masthead-text p { margin: 2px 0 0; font-size: 0.9rem; opacity: 0.92; }
+.masthead-text #poem { font-size: 0.8rem; opacity: 0.8; }
 .intro { margin: 14px 0 0; color: var(--muted); }
 .latest { margin: 0 0 12px; padding-left: 1.2em; font-size: 0.88rem; line-height: 1.5; }
 .latest li { margin-bottom: 4px; }
