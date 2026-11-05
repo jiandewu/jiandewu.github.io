@@ -3,65 +3,60 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Jiande Wu · 中文</title>
-<meta name="description" content="Jiande Wu 的中文页面：AI 前沿导读、美股公告与要闻。">
+<title>每天翻一翻</title>
+<meta name="description" content="每天会翻一翻的两份小报：AI 前沿导读和美股公告与要闻。">
 <link rel="stylesheet" href="../style.css">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="canonical" href="https://jiande.is-a.si/zh/">
-<meta property="og:type" content="profile">
+<meta property="og:type" content="website">
 <meta property="og:url" content="https://jiande.is-a.si/zh/">
-<meta property="og:title" content="Jiande Wu · 中文">
-<meta property="og:description" content="Jiande Wu 的中文页面：AI 前沿导读。">
+<meta property="og:title" content="每天翻一翻">
+<meta property="og:description" content="每天会翻一翻的两份小报：AI 前沿导读和美股公告与要闻。">
 <meta property="og:image" content="https://jiande.is-a.si/avatar.jpg">
 <meta property="og:locale" content="zh_CN">
 <meta name="twitter:card" content="summary">
 </head>
 <body>
-<div class="wrap"><img class="banner" src="banner.svg" alt="" width="1200" height="360"></div>
-<header class="wrap hero">
-  <img class="avatar" src="../avatar.jpg" alt="Jiande Wu" width="112" height="112">
-  <div>
-  <h1>Jiande Wu</h1>
-  <p class="role">Clemson University 公共卫生建模与响应中心（CPHMR）数据经理 / 数据科学家</p>
-  <nav class="links">
+<header class="wrap topbar">
+  <a href="./">📰 每天翻一翻</a>
+  <nav>
     <a href="../" lang="en"><svg class="icon stroke" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>English</a>
-    <a href="https://github.com/jiandewu" style="--brand:var(--fg)"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>GitHub</a>
   </nav>
-  </div>
 </header>
 
 <main class="wrap">
-  <section id="about">
-    <h2>👋 关于</h2>
-    <p>我在 Clemson University 做公共卫生数据管理和呼吸道传染病（COVID-19、流感、RSV）预测，
-      也在做 LLM 与 AI agent 在研究工作流中的应用。此前做过多年生物信息学分析，博士阶段研究并行计算与粒子滤波。
-      工作和学术内容见<a href="../">英文主页</a>。</p>
+  <img class="banner" src="banner.svg" alt="" width="1200" height="360">
+  <section class="hello">
+    <h1 id="greeting">你好 ☕</h1>
+    <p>这里放着我每天会翻一翻的两份小报，都会自己更新。泡杯咖啡，随便看看。</p>
   </section>
 
-  <section id="projects">
-    <h2>🛠️ 小项目</h2>
+  <section>
     <div class="cards">
       <div class="card c-orange">
         <h3><a href="../ai-frontier-digest/">🤖 AI 前沿导读</a></h3>
-        <p>每天从研究者博客、实验室新闻、Hacker News 和 Hugging Face 热门论文中精选 10 条以内，
-          附中文科普解释。</p>
-        <span class="tag">每日更新 · LLM 自动摘要 · <a href="https://github.com/jiandewu/ai-frontier-digest">源码</a></span>
+        <p>AI 圈今天又发生了什么？挑出最值得一读的几条，用大白话讲清楚。</p>
+        <span class="tag">每天更新</span>
       </div>
       <div class="card c-teal">
         <h3><a href="../us-market/">📈 美股公告与要闻</a></h3>
-        <p>大盘股和关注股票的 SEC 公告、内部人交易，FRED 宏观数据，
-          以及每天 5 条美股要闻的中文摘要和宏观解读。</p>
-        <span class="tag">每日更新 · SEC EDGAR · FRED · LLM 摘要</span>
+        <p>美股今天的大新闻、宏观数据，还有大公司刚发的公告，一页看完。</p>
+        <span class="tag">每天更新</span>
       </div>
     </div>
   </section>
 </main>
 
-<footer class="wrap">
-  <p>© 2026 Jiande Wu</p>
-</footer>
+<script>
+  // Greet by the visitor's local time; the static text stays as the fallback.
+  (function () {
+    var h = new Date().getHours();
+    var g = h < 5 ? "夜深了 🌙" : h < 11 ? "早上好 ☀️" : h < 13 ? "中午好 🍜" : h < 18 ? "下午好 ☕" : "晚上好 🌙";
+    document.getElementById("greeting").textContent = g;
+  })();
+</script>
 <script data-goatcounter="https://jiande.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>
