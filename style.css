@@ -157,3 +157,22 @@ html[lang="zh-CN"] .card h3 { color: var(--c, var(--accent)); }
 .hello { padding: 24px 0 0; }
 .hello h1 { margin: 0 0 6px; font-size: 1.8rem; }
 .hello p { margin: 0; color: var(--muted); }
+.latest { margin: 0 0 12px; padding-left: 1.2em; font-size: 0.88rem; line-height: 1.5; }
+.latest li { margin-bottom: 4px; }
+.latest a { position: relative; z-index: 1; color: var(--fg); }
+.impact { margin-left: 6px; padding: 0 5px; border-radius: 4px; font-size: 0.75rem; white-space: nowrap; }
+/* Chinese market convention: red for gains, green for losses. */
+.impact-up { color: #b91c1c; background: rgb(185 28 28 / 0.1); }
+.impact-down { color: #15803d; background: rgb(21 128 61 / 0.1); }
+.impact-flat { color: var(--muted); background: var(--line); }
+.stats { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.stat { padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); }
+.stat-name { font-size: 0.8rem; color: var(--muted); }
+.stat-value { font-size: 1.45rem; font-weight: 600; margin: 2px 0; }
+.stat-note { font-size: 0.78rem; color: var(--muted); }
+.rise { color: #b91c1c; }
+.fall { color: #15803d; }
+@media (prefers-color-scheme: dark) {
+  .impact-up, .rise { color: #f87171; }
+  .impact-down, .fall { color: #4ade80; }
+}

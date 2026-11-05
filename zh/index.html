@@ -38,14 +38,27 @@
       <div class="card c-orange">
         <h3><a href="../ai-frontier-digest/">🤖 AI 前沿导读</a></h3>
         <p>AI 圈今天又发生了什么？挑出最值得一读的几条，用大白话讲清楚。</p>
+        <ol class="latest" id="ai-latest" hidden></ol>
         <span class="tag">每天更新</span>
       </div>
       <div class="card c-teal">
         <h3><a href="../us-market/">📈 美股公告与要闻</a></h3>
         <p>美股今天的大新闻、宏观数据，还有大公司刚发的公告，一页看完。</p>
+        <ol class="latest" id="market-latest" hidden></ol>
         <span class="tag">每天更新</span>
       </div>
     </div>
+  </section>
+
+  <section id="numbers" hidden>
+    <h2>📊 今天的几个数</h2>
+    <div class="stats" id="stats"></div>
+    <p class="more">数据来自 FRED，各项为最新一期，箭头对比上一期。</p>
+  </section>
+
+  <section>
+    <p class="more">📮 用 RSS 订阅：<a href="../ai-frontier-digest/feed.xml">AI 前沿导读</a> ·
+      <a href="../us-market/feed.xml">美股要闻</a></p>
   </section>
 </main>
 
@@ -56,6 +69,61 @@
     var g = h < 5 ? "夜深了 🌙" : h < 11 ? "早上好 ☀️" : h < 13 ? "中午好 🍜" : h < 18 ? "下午好 ☕" : "晚上好 🌙";
     document.getElementById("greeting").textContent = g;
   })();
+
+  // Fill the cards from the two sites; on any failure the cards keep their static text.
+  function fillList(id, rows) {
+    var list = document.getElementById(id);
+    rows.forEach(function (row) {
+      var li = document.createElement("li"), a = document.createElement("a");
+      a.href = row.url;
+      a.textContent = row.title;
+      li.appendChild(a);
+      if (row.impact) {
+        var chip = document.createElement("span");
+        chip.className = "impact impact-" + ({"利好": "up", "利空": "down"}[row.impact] || "flat");
+        chip.textContent = row.impact;
+        li.appendChild(chip);
+      }
+      list.appendChild(li);
+    });
+    if (rows.length) list.hidden = false;
+  }
+
+  fetch("../ai-frontier-digest/feed.xml").then(function (r) { return r.text(); }).then(function (text) {
+    var items = new DOMParser().parseFromString(text, "application/xml").querySelectorAll("item");
+    fillList("ai-latest", Array.prototype.slice.call(items, 0, 3).map(function (item) {
+      return {title: item.querySelector("title").textContent, url: item.querySelector("link").textContent};
+    }));
+  }).catch(function () {});
+
+  fetch("../us-market/latest.json").then(function (r) { return r.json(); }).then(function (data) {
+    fillList("market-latest", data.items.map(function (item) {
+      return {title: item.title, url: "../us-market/" + item.url, impact: item.impact};
+    }));
+    var stats = document.getElementById("stats");
+    data.macro.forEach(function (m) {
+      var tile = document.createElement("div"), name = document.createElement("div"),
+          value = document.createElement("div"), note = document.createElement("div");
+      tile.className = "stat";
+      name.className = "stat-name";
+      name.textContent = m.name;
+      value.className = "stat-value";
+      value.textContent = (m.unit === "$" ? "$" : "") + m.value + (m.unit === "%" ? "%" : "");
+      note.className = "stat-note";
+      var diff = m.previous === null ? 0 : m.value - m.previous;
+      if (diff) {
+        var arrow = document.createElement("span");
+        arrow.className = diff > 0 ? "rise" : "fall";
+        arrow.textContent = (diff > 0 ? "▲ " : "▼ ") + Math.abs(diff).toFixed(2);
+        note.appendChild(arrow);
+        note.appendChild(document.createTextNode(" · "));
+      }
+      note.appendChild(document.createTextNode(m.date.slice(5)));
+      tile.append(name, value, note);
+      stats.appendChild(tile);
+    });
+    if (data.macro.length) document.getElementById("numbers").hidden = false;
+  }).catch(function () {});
 </script>
 <script data-goatcounter="https://jiande.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
