@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>每天翻一翻</title>
 <meta name="description" content="每天会翻一翻的两份小报：AI 前沿导读和美股公告与要闻。">
-<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../style.css?v=2026-11-05">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -27,11 +27,14 @@
 </header>
 
 <main class="wrap">
-  <img class="banner" src="banner.svg" alt="" width="1200" height="360">
-  <section class="hello">
-    <h1 id="greeting">你好 ☕</h1>
-    <p>这里放着我每天会翻一翻的两份小报，都会自己更新。泡杯咖啡，随便看看。</p>
-  </section>
+  <header class="masthead">
+    <img class="banner" id="banner" src="photos/banner-summer.webp" alt="" width="1600" height="320">
+    <div class="masthead-text">
+      <h1 id="greeting">你好 ☕</h1>
+      <p id="today"></p>
+    </div>
+  </header>
+  <p class="intro">这里放着我每天会翻一翻的两份小报，都会自己更新。泡杯咖啡，随便看看。</p>
 
   <section>
     <div class="cards">
@@ -51,9 +54,29 @@
   </section>
 
   <section id="numbers" hidden>
-    <h2>📊 今天的几个数</h2>
+    <h2>📊 最近的几个数</h2>
     <div class="stats" id="stats"></div>
-    <p class="more">数据来自 FRED，各项为最新一期，箭头对比上一期。</p>
+    <p class="more">数据来自 FRED，通常晚一两天发布，房贷利率每周一更；方块里是各项的数据日期，箭头对比上一期。</p>
+  </section>
+
+  <section id="photos">
+    <h2>📷 随手拍</h2>
+    <div class="photos">
+      <figure><a href="photos/spring-lawn.webp"><img src="photos/spring-lawn-thumb.webp" alt="春天的草坪" width="600" height="338" loading="lazy"></a>
+        <figcaption>春天的草坪 · 2022-03</figcaption></figure>
+      <figure><a href="photos/summer-beach.webp"><img src="photos/summer-beach-thumb.webp" alt="海边的傍晚" width="600" height="360" loading="lazy"></a>
+        <figcaption>海边的傍晚 · 2016-06</figcaption></figure>
+      <figure><a href="photos/summer-sunset.webp"><img src="photos/summer-sunset-thumb.webp" alt="树影里的日落" width="512" height="384" loading="lazy"></a>
+        <figcaption>树影里的日落 · 2008-06</figcaption></figure>
+      <figure><a href="photos/summer-fishing.webp"><img src="photos/summer-fishing-thumb.webp" alt="海边钓鱼" width="600" height="450" loading="lazy"></a>
+        <figcaption>海边钓鱼 · 2008-06</figcaption></figure>
+      <figure><a href="photos/summer-lake.webp"><img src="photos/summer-lake-thumb.webp" alt="湖边" width="600" height="450" loading="lazy"></a>
+        <figcaption>湖边 · 2023-08</figcaption></figure>
+      <figure><a href="photos/autumn-path-1.webp"><img src="photos/autumn-path-1-thumb.webp" alt="落叶小路" width="288" height="512" loading="lazy"></a>
+        <figcaption>落叶小路 · 2024-10</figcaption></figure>
+      <figure><a href="photos/winter-snow.webp"><img src="photos/winter-snow-thumb.webp" alt="雪后" width="600" height="338" loading="lazy"></a>
+        <figcaption>雪后 · 2016-01</figcaption></figure>
+    </div>
   </section>
 
   <section>
@@ -62,12 +85,56 @@
   </section>
 </main>
 
+<dialog id="lightbox" aria-label="照片">
+  <img alt="">
+  <p></p>
+</dialog>
+
 <script>
   // Greet by the visitor's local time; the static text stays as the fallback.
   (function () {
     var h = new Date().getHours();
     var g = h < 5 ? "夜深了 🌙" : h < 11 ? "早上好 ☀️" : h < 13 ? "中午好 🍜" : h < 18 ? "下午好 ☕" : "晚上好 🌙";
     document.getElementById("greeting").textContent = g;
+  })();
+
+  // Date, solar term, and a banner for the season, all from the visitor's local date.
+  (function () {
+    var now = new Date(), m = now.getMonth() + 1, d = now.getDate();
+    var season = m >= 3 && m <= 5 ? "spring" : m >= 6 && m <= 8 ? "summer" : m >= 9 && m <= 11 ? "autumn" : "winter";
+    document.getElementById("banner").src = "photos/banner-" + season + ".webp";
+    // Usual Gregorian dates of the 24 solar terms; actual dates move by a day between years.
+    var terms = [[1, 5, "小寒"], [1, 20, "大寒"], [2, 4, "立春"], [2, 19, "雨水"], [3, 5, "惊蛰"], [3, 20, "春分"],
+      [4, 4, "清明"], [4, 20, "谷雨"], [5, 5, "立夏"], [5, 21, "小满"], [6, 5, "芒种"], [6, 21, "夏至"],
+      [7, 7, "小暑"], [7, 22, "大暑"], [8, 7, "立秋"], [8, 23, "处暑"], [9, 7, "白露"], [9, 23, "秋分"],
+      [10, 8, "寒露"], [10, 23, "霜降"], [11, 7, "立冬"], [11, 22, "小雪"], [12, 7, "大雪"], [12, 21, "冬至"]];
+    var today = new Date(now.getFullYear(), m - 1, d), term = "";
+    for (var i = 0; i < terms.length; i++) {
+      var t = terms[i], date = new Date(now.getFullYear(), t[0] - 1, t[1]);
+      var days = Math.round((date - today) / 86400000);
+      if (days === 0) { term = "今天" + t[2]; break; }
+      if (days === 1) { term = "明天" + t[2]; break; }
+      if (days > 1 && days <= 7) { term = days + " 天后" + t[2]; break; }
+      if (days < 0) term = t[2] + "时节";
+    }
+    if (!term) term = "冬至时节";
+    var week = "日一二三四五六".charAt(now.getDay());
+    document.getElementById("today").textContent = m + "月" + d + "日 周" + week + " · " + term;
+  })();
+
+  // Photo wall: open the full-size image in a dialog; without JavaScript the link opens the image.
+  (function () {
+    var box = document.getElementById("lightbox"), img = box.querySelector("img"), cap = box.querySelector("p");
+    document.querySelectorAll(".photos a").forEach(function (a) {
+      a.addEventListener("click", function (event) {
+        event.preventDefault();
+        img.src = a.href;
+        img.alt = a.querySelector("img").alt;
+        cap.textContent = a.parentNode.querySelector("figcaption").textContent;
+        box.showModal();
+      });
+    });
+    box.addEventListener("click", function () { box.close(); });
   })();
 
   // Fill the cards from the two sites; on any failure the cards keep their static text.
