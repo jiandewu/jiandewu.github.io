@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>每天翻一翻</title>
 <meta name="description" content="每天会翻一翻的两份小报：AI 前沿导读和美股公告与要闻。">
-<link rel="stylesheet" href="../style.css?v=2026-11-06b">
+<link rel="stylesheet" href="../style.css?v=2026-11-06c">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -35,7 +35,7 @@
       <p id="poem"></p>
     </div>
   </header>
-  <p class="intro">这里放着我每天会翻一翻的两份小报，都会自己更新。泡杯咖啡，随便看看。</p>
+  <p class="intro">这里放着我每天会翻一翻的几份小报，都会自己更新。泡杯咖啡，随便看看。</p>
 
   <section>
     <div class="cards">
@@ -43,19 +43,19 @@
         <h3><a href="../ai-frontier-digest/science/">🔭 科学前沿导读</a></h3>
         <p>天上、地下、身体里，科学家这几天又发现了什么？挑几条最有意思的讲给你听。</p>
         <ol class="latest" id="science-latest" hidden></ol>
-        <span class="tag">每天更新</span>
+        <span class="tag" id="science-updated" hidden></span>
       </div>
       <div class="card c-orange">
         <h3><a href="../ai-frontier-digest/">🤖 AI 前沿导读</a></h3>
         <p>AI 圈今天又发生了什么？挑出最值得一读的几条，用大白话讲清楚。</p>
         <ol class="latest" id="ai-latest" hidden></ol>
-        <span class="tag">每天更新</span>
+        <span class="tag" id="ai-updated" hidden></span>
       </div>
       <div class="card c-teal">
         <h3><a href="../us-market/">📈 美股公告与要闻</a></h3>
         <p>美股今天的大新闻、宏观数据，还有大公司刚发的公告，一页看完。</p>
         <ol class="latest" id="market-latest" hidden></ol>
-        <span class="tag">每天更新</span>
+        <span class="tag" id="market-updated" hidden></span>
       </div>
     </div>
   </section>
@@ -65,14 +65,17 @@
       <span class="tag">📖 今日长文</span>
       <h3><a id="lr-link" href="../ai-frontier-digest/longread/">每天一篇值得读原文的英文长文</a></h3>
       <p id="lr-why">从英文长文刊物里每天只挑一篇，附三四百字的中文导读，适合找个安静的时候慢慢读。</p>
-      <span class="tag" id="lr-meta">每天更新</span>
+      <span class="tag" id="lr-meta" hidden></span>
     </div>
   </section>
 
   <section id="numbers" hidden>
     <h2>📊 最近的几个数</h2>
     <div class="stats" id="stats"></div>
-    <p class="more">数据来自 FRED，通常晚一两天发布，房贷利率每周一更；方块里是各项的数据日期，箭头对比上一期。</p>
+    <ul class="news-numbers" id="news-numbers" hidden></ul>
+    <p class="more">市场、汇率和利率来自 FRED，通常晚一两天发布，房贷利率每周一更，人民币汇率约晚一周；
+      论文数是 arXiv 上 AI 方向四个分类（cs.AI、cs.CL、cs.CV、cs.LG）当天新提交的论文。方块里是数据日期，箭头对比上一期。
+      下面几条新闻里的数字由 AI 从当天的导读中挑出，程序会核对数字确实出现在条目文字里。</p>
   </section>
 
   <section id="photos">
@@ -216,9 +219,29 @@
     if (rows.length) list.hidden = false;
   }
 
-  function fillFromFeed(url, id) {
+  // "3 小时前更新"; the exact local time shows on hover.
+  function showUpdated(id, when) {
+    var el = document.getElementById(id), time = new Date(when), minutes = (Date.now() - time) / 60000;
+    if (isNaN(minutes)) return;
+    el.textContent = minutes < 60 ? Math.max(1, Math.round(minutes)) + " 分钟前更新"
+      : minutes < 1440 ? Math.round(minutes / 60) + " 小时前更新"
+      : Math.round(minutes / 1440) + " 天前更新";
+    el.title = time.toLocaleString("zh-CN", {hour12: false});
+    el.hidden = false;
+  }
+
+  // A date-only YYYY-MM-DD in New York time, against today in New York.
+  function dayLabel(day) {
+    var today = new Intl.DateTimeFormat("en-CA", {timeZone: "America/New_York"}).format(new Date()),
+        days = Math.round((Date.parse(today) - Date.parse(day)) / 86400000);
+    return days <= 0 ? "今天" : days === 1 ? "昨天" : days + " 天前";
+  }
+
+  function fillFromFeed(url, id, updatedId) {
     fetch(url).then(function (r) { return r.text(); }).then(function (text) {
-      var items = new DOMParser().parseFromString(text, "application/xml").querySelectorAll("item");
+      var doc = new DOMParser().parseFromString(text, "application/xml"), items = doc.querySelectorAll("item"),
+          built = doc.querySelector("channel > lastBuildDate");
+      if (built) showUpdated(updatedId, built.textContent);
       fillList(id, Array.prototype.slice.call(items, 0, 3).map(function (item) {
         return {title: item.querySelector("title").textContent, url: item.querySelector("link").textContent};
       }));
@@ -230,38 +253,82 @@
     link.textContent = data.title;
     link.href = "../ai-frontier-digest/longread/" + data.page;
     document.getElementById("lr-why").textContent = data.why;
-    document.getElementById("lr-meta").textContent = data.source + " · " + data.original;
+    var meta = document.getElementById("lr-meta");
+    meta.textContent = data.source + " · " + data.original + " · " + dayLabel(data.date) + "的推荐";
+    meta.hidden = false;
   }).catch(function () {});
-  fillFromFeed("../ai-frontier-digest/science/feed.xml", "science-latest");
-  fillFromFeed("../ai-frontier-digest/feed.xml", "ai-latest");
+  fillFromFeed("../ai-frontier-digest/science/feed.xml", "science-latest", "science-updated");
+  fillFromFeed("../ai-frontier-digest/feed.xml", "ai-latest", "ai-updated");
 
-  fetch("../us-market/latest.json").then(function (r) { return r.json(); }).then(function (data) {
+  // "最近的几个数": market tiles first, then finance and arXiv tiles, then numbers from the news.
+  function addTile(t) {
+    var tile = document.createElement(t.url ? "a" : "div"), name = document.createElement("div"),
+        value = document.createElement("div"), note = document.createElement("div");
+    tile.className = "stat";
+    if (t.url) tile.href = t.url;
+    if (t.title) tile.title = t.title;
+    name.className = "stat-name";
+    name.textContent = t.name;
+    value.className = "stat-value";
+    value.textContent = t.value;
+    note.className = "stat-note";
+    if (t.diff) {
+      var arrow = document.createElement("span");
+      arrow.className = t.diff > 0 ? "rise" : "fall";
+      arrow.textContent = (t.diff > 0 ? "▲ " : "▼ ") + t.change;
+      note.appendChild(arrow);
+      note.appendChild(document.createTextNode(" · "));
+    }
+    note.appendChild(document.createTextNode(t.date.slice(5)));
+    tile.append(name, value, note);
+    document.getElementById("stats").appendChild(tile);
+    document.getElementById("numbers").hidden = false;
+  }
+
+  function getJSON(url) {
+    return fetch(url).then(function (r) { return r.json(); }).catch(function () { return null; });
+  }
+  var market = getJSON("../us-market/latest.json"), more = getJSON("../ai-frontier-digest/numbers/latest.json");
+  Promise.all([market, more]).then(function (results) {
+    (results[0] && results[0].macro || []).forEach(function (m) {
+      var diff = m.previous === null ? 0 : m.value - m.previous;
+      addTile({name: m.name, date: m.date, diff: diff, change: Math.abs(diff).toFixed(2),
+               value: (m.unit === "$" ? "$" : "") + m.value + (m.unit === "%" ? "%" : ""),
+               url: "https://fred.stlouisfed.org/series/" + m.id});
+    });
+    var data = results[1] || {};
+    (data.tiles || []).forEach(function (t) {
+      var fixed = {minimumFractionDigits: t.decimals, maximumFractionDigits: t.decimals},
+          diff = t.previous === null ? 0 : t.value - t.previous;
+      addTile({name: t.name, date: t.date, diff: diff, url: t.source, title: t.detail,
+               value: t.unit + t.value.toLocaleString("en-US", fixed),
+               change: t.change === "pct" ? Math.abs(diff / t.previous * 100).toFixed(2) + "%"
+                 : Math.abs(diff).toLocaleString("en-US", fixed)});
+    });
+    var list = document.getElementById("news-numbers");
+    (data.news || []).forEach(function (n) {
+      var li = document.createElement("li"), num = document.createElement("b"), a = document.createElement("a"),
+          tag = document.createElement("span");
+      num.textContent = n.number;
+      tag.className = "news-section";
+      tag.textContent = n.section;
+      a.href = n.link;
+      a.textContent = n.title;
+      li.append(tag, num, document.createTextNode(" " + n.label + " · "), a);
+      list.appendChild(li);
+    });
+    if (list.children.length) {
+      list.hidden = false;
+      document.getElementById("numbers").hidden = false;
+    }
+  });
+
+  market.then(function (data) {
+    if (!data) return;
     fillList("market-latest", data.items.map(function (item) {
       return {title: item.title, url: "../us-market/" + item.url, impact: item.impact};
     }));
-    var stats = document.getElementById("stats");
-    data.macro.forEach(function (m) {
-      var tile = document.createElement("div"), name = document.createElement("div"),
-          value = document.createElement("div"), note = document.createElement("div");
-      tile.className = "stat";
-      name.className = "stat-name";
-      name.textContent = m.name;
-      value.className = "stat-value";
-      value.textContent = (m.unit === "$" ? "$" : "") + m.value + (m.unit === "%" ? "%" : "");
-      note.className = "stat-note";
-      var diff = m.previous === null ? 0 : m.value - m.previous;
-      if (diff) {
-        var arrow = document.createElement("span");
-        arrow.className = diff > 0 ? "rise" : "fall";
-        arrow.textContent = (diff > 0 ? "▲ " : "▼ ") + Math.abs(diff).toFixed(2);
-        note.appendChild(arrow);
-        note.appendChild(document.createTextNode(" · "));
-      }
-      note.appendChild(document.createTextNode(m.date.slice(5)));
-      tile.append(name, value, note);
-      stats.appendChild(tile);
-    });
-    if (data.macro.length) document.getElementById("numbers").hidden = false;
+    if (data.updated) showUpdated("market-updated", data.updated);
   }).catch(function () {});
 </script>
 <script data-goatcounter="https://jiande.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
