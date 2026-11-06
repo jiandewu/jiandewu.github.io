@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Multi-source transformer forecasting · Jiande Wu</title>
+<meta name="description" content="Case study: a transformer that fuses case, death, and social media sentiment data for county-level COVID-19 forecasting, evaluated retrospectively over three Omicron waves.">
+<link rel="stylesheet" href="../../style.css?v=2026-11-06b">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="canonical" href="https://jiande.is-a.si/projects/covid-transformer/">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://jiande.is-a.si/projects/covid-transformer/">
+<meta property="og:title" content="Multi-source transformer forecasting — case study">
+<meta property="og:description" content="A transformer that fuses case, death, and social media sentiment data for county-level COVID-19 forecasting.">
+<meta property="og:image" content="https://jiande.is-a.si/avatar.jpg">
+<meta name="twitter:card" content="summary">
+</head>
+<body>
+<header class="wrap topbar">
+  <a href="../../">Jiande Wu</a>
+  <nav>
+    <a href="../../#projects">Projects</a>
+    <a href="../../Jiande_Wu_CV.pdf">CV</a>
+  </nav>
+</header>
+
+<main class="wrap article">
+  <h1>Multi-source transformer forecasting</h1>
+  <p class="lede">A transformer that fuses case, death, and social media sentiment
+    data for county-level COVID-19 forecasting, evaluated retrospectively across
+    46 South Carolina counties and three Omicron waves.</p>
+  <p class="more"><a href="https://doi.org/10.1016/j.epidem.2025.100865">Paper</a> ·
+    <a href="https://github.com/DMA-PRIME/covid-transformer-multisource">Code</a> ·
+    PyTorch · 2025</p>
+  <p class="more">Wu J, Tanim S, Woo M, Ahammed T, Bleichrodt AM, Rennert L.
+    <i>Epidemics</i> 53 (2025) 100865. Open access (CC BY 4.0).</p>
+
+  <section>
+    <h2>Problem</h2>
+    <p>Epidemic forecasts often depend only on delayed indicators such as
+      confirmed cases. Prior work using social media signals focused on
+      detecting outbreaks early, and often only in counties of more than a
+      million people, which can miss outbreaks in less populous areas. The study asked whether a transformer that fuses
+      epidemiological records with county-level social media sentiment could
+      forecast cases and deaths for all 46 counties of one state.</p>
+  </section>
+
+  <section>
+    <h2>Data</h2>
+    <ul>
+      <li><b>Epidemiological records</b>, January 2020 to March 2023: county
+        cases and deaths from The New York Times, and positive cases,
+        hospitalization rates, and testing data from the CDC. Targets are the
+        7-day averages of cases and deaths.</li>
+      <li><b>Demographics</b>: county and health service area populations.</li>
+      <li><b>Social media</b>: posts on X (Twitter) about COVID-19 in South
+        Carolina, collected through Sprinklr with geolocation and keyword
+        filters, mapped to counties, and reduced to three sentiment channels
+        (positive, negative, neutral) from Sprinklr's labels.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Model</h2>
+    <ul>
+      <li><b>Encoder-only transformer</b>, trained from scratch: 512-dimensional
+        input embeddings, 4 encoder layers with 8 attention heads, sinusoidal
+        positional encoding, and a linear projection to the next <i>k</i> values.
+        The decoder was dropped because it added overfitting risk and
+        instability in multi-step forecasting.</li>
+      <li><b>Sentiment fusion</b>: the three sentiment channels pass through a
+        1 × 1 convolution and a fully connected layer, and are added to the
+        embeddings of the other features.</li>
+      <li><b>Direct multi-step forecasting</b>: a separate model for each
+        horizon (up to 7 days ahead, or up to 5 weeks ahead) instead of feeding
+        predictions back in, which avoids accumulating errors.</li>
+      <li><b>One model for all counties</b>, trained on randomly sampled
+        counties, start dates, and window lengths (look-back of up to 16 days
+        or 5 weeks), so that it learns from many phases of the pandemic rather
+        than one.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Evaluation design</h2>
+    <ul>
+      <li><b>Time-ordered three-way split</b>: training January 2020 to
+        September 2021; validation October to November 2021, used only for
+        tuning and early stopping; test December 2021 to March 2023, used once
+        at the end.</li>
+      <li><b>Test periods</b> matched to the Omicron waves: B.1.1.529 (December
+        2021 to March 2022), BA.4/BA.5 (May to October 2022), and BQ.1/XBB.1.5
+        (December 2022 to February 2023).</li>
+      <li><b>Metrics</b>: county-level percentage agreement between predicted and
+        observed values (median and interquartile range across counties), RMSE,
+        and MAE.</li>
+      <li><b>Comparisons</b>: a persistence baseline (last observation carried
+        forward), a per-county auto-ARIMA, and the same model without social
+        media data.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Results</h2>
+    <p>Median county agreement across the three waves:</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Target</th><th>1 week ahead</th><th>5 weeks ahead</th></tr></thead>
+      <tbody>
+        <tr><td>Cases</td><td>74.0–82.6%</td><td>68.7–79.6%</td></tr>
+        <tr><td>Deaths</td><td>83.2–86.3%</td><td>84.3–87.2%</td></tr>
+      </tbody>
+    </table></div>
+    <p>Against the baselines, as reported in the paper's comparison of longer-
+      and shorter-term forecasts:</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Horizon, metric</th><th>This model</th><th>Persistence</th><th>ARIMA</th></tr></thead>
+      <tbody>
+        <tr><td>5 weeks, agreement</td><td><b>81.9%</b></td><td>61.2%</td><td>59.9%</td></tr>
+        <tr><td>5 weeks, RMSE</td><td><b>35.1</b></td><td>98.4</td><td>106.9</td></tr>
+        <tr><td>5 weeks, MAE</td><td><b>23.0</b></td><td>72.1</td><td>77.6</td></tr>
+        <tr><td>7 days, agreement</td><td><b>74.5%</b></td><td>71.6%</td><td>55.9%</td></tr>
+      </tbody>
+    </table></div>
+    <p>The advantage over persistence is large at five weeks and small at seven
+      days, where carrying the last value forward is a strong baseline. Accuracy
+      falls as the horizon grows, and predicted peaks consistently lag the
+      observed ones.</p>
+
+    <h3>What social media data added</h3>
+    <p>Change in median case agreement from adding sentiment data, by wave
+      (range over horizons):</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Wave</th><th>1–7 days ahead</th><th>1–5 weeks ahead</th></tr></thead>
+      <tbody>
+        <tr><td>1 (B.1.1.529)</td><td>+4.94 to +10.50%</td><td>+9.04 to +14.82%</td></tr>
+        <tr><td>2 (BA.4/BA.5)</td><td>−4.22 to +4.06%</td><td>−2.69 to +10.09%</td></tr>
+        <tr><td>3 (BQ.1/XBB.1.5)</td><td>−3.57 to +3.53%</td><td>−0.49 to +7.52%</td></tr>
+      </tbody>
+    </table></div>
+    <p>The gain was clear in the first Omicron wave, a period of rapid change
+      and heavy public discussion, and mixed afterwards. Overall the paper
+      describes it as a mild to moderate improvement.</p>
+  </section>
+
+  <section>
+    <h2>Limitations</h2>
+    <ul>
+      <li><b>Retrospective only.</b> The evaluation assumes complete, timely
+        data. Live data streams can be delayed, revised, or stopped: The New York
+        Times ended its COVID-19 reporting in March 2023, which ended validation
+        with that source.</li>
+      <li><b>Point forecasts.</b> The model gives no prediction intervals, so it
+        was not evaluated probabilistically, which is the standard for
+        epidemiological forecasting.</li>
+      <li><b>One state.</b> Performance elsewhere is unproven; a new region would
+        need local retraining and validation.</li>
+      <li><b>Social media is an indirect signal.</b> News coverage and platform
+        changes move it independently of disease spread, so its value can drift
+        over time.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>What carried forward</h2>
+    <p>Later work addresses the first two limitations. Evaluating on data as
+      it was published at the time, rather than on later revised values, is
+      the basis of <a href="https://github.com/DMA-PRIME/ObsAwareData">ObsAwareData</a>,
+      which keeps every release and a reliability flag on each value, and of the
+      planned real-time benchmark in <a href="../resplens/">resplens</a>, which
+      is to report probabilistic scores.</p>
+  </section>
+</main>
+
+<footer class="wrap">
+  <p>© 2026 Jiande Wu</p>
+</footer>
+<script data-goatcounter="https://jiande.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+name: Freshness Check
+
+# Open an issue (GitHub emails the owner) when a section linked from the home page stops
+# updating, and close it once everything is fresh again.
+on:
+  schedule:
+    - cron: "37 1,13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: freshness
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SITE: https://jiande.is-a.si
+      MAX_HOURS: 36
+      MAX_DAYS: 2
+      TITLE: 站点内容更新停滞
+    steps:
+      - name: Check commits and live pages
+        id: check
+        run: |
+          problems=""
+          note() { problems="$problems- $1"$'\n'; echo "PROBLEM: $1"; }
+          now=$(date +%s)
+
+          # Last bot commit to each data path: label|repo|path
+          for row in "AI 前沿导读|jiandewu/ai-frontier-digest|data" \
+                     "科学前沿导读|jiandewu/ai-frontier-digest|science/data" \
+                     "每日长文|jiandewu/ai-frontier-digest|longread/data" \
+                     "美股要闻|jiandewu/us-market|news"; do
+            IFS='|' read -r label repo path <<< "$row"
+            when=$(gh api "repos/$repo/commits?path=$path&per_page=1" --jq '.[0].commit.committer.date' 2>/dev/null || true)
+            if [ -z "$when" ]; then
+              note "$label：查不到 $repo/$path 的提交记录"
+              continue
+            fi
+            hours=$(( (now - $(date -d "$when" +%s)) / 3600 ))
+            echo "$label: last commit $when (${hours}h ago)"
+            if [ "$hours" -gt "$MAX_HOURS" ]; then
+              note "$label：$repo/$path 已经 ${hours} 小时没有新提交（上次 $when）"
+            fi
+          done
+
+          # The live pages answer, and the dated JSON files are recent (catches failed Pages builds).
+          for url in "$SITE/" "$SITE/zh/" "$SITE/ai-frontier-digest/" "$SITE/ai-frontier-digest/science/" \
+                     "$SITE/ai-frontier-digest/longread/" "$SITE/us-market/"; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' -L --max-time 30 "$url" || echo 000)
+            echo "$url: HTTP $code"
+            [ "$code" = 200 ] || note "$url 返回 HTTP $code"
+          done
+          today=$(TZ=America/New_York date +%F)
+          for row in "每日长文|$SITE/ai-frontier-digest/longread/latest.json" "美股要闻|$SITE/us-market/latest.json"; do
+            IFS='|' read -r label url <<< "$row"
+            day=$(curl -s -L --max-time 30 "$url" | jq -r '.date // empty' 2>/dev/null || true)
+            if [ -z "$day" ]; then
+              note "$label：$url 读不到日期"
+              continue
+            fi
+            days=$(( ($(date -d "$today" +%s) - $(date -d "$day" +%s)) / 86400 ))
+            echo "$url: date $day (${days}d old)"
+            if [ "$days" -gt "$MAX_DAYS" ]; then
+              note "$label：线上 latest.json 还停在 $day（今天 $today，美东时间）"
+            fi
+          done
+
+          printf '%s' "$problems" > problems.md
+
+      - name: Open, update or close the issue
+        run: |
+          number=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "in:title $TITLE" \
+                     --json number,title --jq "map(select(.title == \"$TITLE\"))[0].number // empty")
+          run_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          if [ -s problems.md ]; then
+            {
+              echo "检查时间：$(TZ=America/New_York date '+%F %H:%M') ET（[运行日志]($run_url)）"
+              echo
+              cat problems.md
+              echo
+              echo "先看对应仓库的 Actions 日志。全部恢复后，下一次检查会自动关闭这个 issue。"
+            } > body.md
+            if [ -n "$number" ]; then
+              gh issue edit "$number" --repo "$GITHUB_REPOSITORY" --body-file body.md
+            else
+              gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body-file body.md --assignee "$GITHUB_REPOSITORY_OWNER"
+            fi
+          elif [ -n "$number" ]; then
+            gh issue close "$number" --repo "$GITHUB_REPOSITORY" --comment "已恢复：$(TZ=America/New_York date '+%F %H:%M') ET 的检查全部正常（[运行日志]($run_url)）。"
+          else
+            echo "All fresh."
+          fi

@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>resplens · Jiande Wu</title>
+<meta name="description" content="Case study: reliability-aware LLM tools, retrieval, and an agent for US respiratory surveillance data, with pre-registered evaluations.">
+<link rel="stylesheet" href="../../style.css?v=2026-11-06b">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="canonical" href="https://jiande.is-a.si/projects/resplens/">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://jiande.is-a.si/projects/resplens/">
+<meta property="og:title" content="resplens — case study">
+<meta property="og:description" content="Reliability-aware LLM tools, retrieval, and an agent for US respiratory surveillance data, with pre-registered evaluations.">
+<meta property="og:image" content="https://jiande.is-a.si/avatar.jpg">
+<meta name="twitter:card" content="summary">
+</head>
+<body>
+<header class="wrap topbar">
+  <a href="../../">Jiande Wu</a>
+  <nav>
+    <a href="../../#projects">Projects</a>
+    <a href="../../Jiande_Wu_CV.pdf">CV</a>
+  </nav>
+</header>
+
+<main class="wrap article">
+  <h1>resplens</h1>
+  <p class="lede">Reliability-aware LLM tools for US respiratory surveillance data
+    (COVID-19, influenza, RSV): MCP data tools, document retrieval, and an agent,
+    each with an evaluation fixed before the test run.</p>
+  <p class="more"><a href="https://github.com/jiandewu/resplens">Code and evaluation records</a> ·
+    Python · MCP · sentence-transformers · Ollama · 2026</p>
+
+  <section>
+    <h2>Problem</h2>
+    <p>Public health surveillance numbers are revised after publication, some
+      weeks rest on few reporting hospitals, and some sudden jumps are reporting
+      artifacts. A language model that reads these numbers at face value will
+      state wrong trends with confidence. The question behind the project: can
+      an assistant answer "what is the trend, and can I trust it?" from the data
+      itself, without inventing numbers or caveats?</p>
+    <p>The data are <a href="https://github.com/DMA-PRIME/ObsAwareData">ObsAwareData</a>
+      (CC BY 4.0): weekly CDC hospital admissions (NHSN), emergency department
+      visits (NSSP), and wastewater (NWSS) for the 50 states and DC, with a
+      reliability flag on every value and the full revision history.</p>
+  </section>
+
+  <section>
+    <h2>System</h2>
+    <ul>
+      <li><b>Six data tools behind an MCP server.</b> Series with a flag on every
+        week, a reliability summary with plain-language caveats, the revision
+        history of one week's value, and a series exactly as it was published on
+        a past date. Tools never average, fill in, or reinterpret values.
+        Invalid requests return an error that tells the model how to correct
+        the call.</li>
+      <li><b>Document retrieval</b> over 28 public documents (about 74,000
+        words): CDC dataset descriptions, reporting protocols, methodology
+        pages, FAQs, two MMWR reports, and the ObsAwareData documentation. Every
+        source file is kept unchanged with its URL, retrieval date, and
+        SHA-256.</li>
+      <li><b>An agent loop</b> that gives a local model the six data tools plus
+        documentation search.</li>
+      <li><b>Reproducible inputs.</b> All answers read one tagged data release,
+        downloaded on first use and checked against its published checksums.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Evaluation 1: which retrieval setup finds the evidence?</h2>
+    <p>40 hand-reviewed questions, each with verbatim evidence from the
+      documents; 15 for tuning, 25 held out. Four test configurations were fixed
+      from the tuning results before the held-out set was run once.
+      Results on the 21 answerable held-out questions, 300-token chunks:</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Configuration</th><th>Recall@5</th><th>Recall@10</th><th>MRR</th><th>Latency (median)</th></tr></thead>
+      <tbody>
+        <tr><td>BM25</td><td>0.48</td><td>0.52</td><td>0.38</td><td>1 ms</td></tr>
+        <tr><td>Dense (<code>BAAI/bge-m3</code>)</td><td>0.62</td><td>0.76</td><td>0.48</td><td>9 ms</td></tr>
+        <tr><td>Hybrid (BM25 + dense)</td><td>0.57</td><td>0.71</td><td>0.47</td><td>10 ms</td></tr>
+        <tr><td>Hybrid + cross-encoder rerank</td><td><b>0.86</b></td><td><b>0.86</b></td><td>0.50</td><td>206 ms</td></tr>
+      </tbody>
+    </table></div>
+    <p>Reranked hybrid retrieval found the evidence in the top five for 8 more
+      questions than BM25 and none fewer (exact sign test p = 0.008). No
+      configuration was reliably better at putting the evidence first. Two of
+      the three misses were table lookups (a state threshold in a 50-row table,
+      formula text from a PDF table), which argued for answering such questions
+      with structured tools rather than text retrieval.</p>
+  </section>
+
+  <section>
+    <h2>Evaluation 2: is retrieval needed at all?</h2>
+    <p>The whole corpus, about 131,000 tokens, fits in a long-context model, so
+      retrieval has to earn its place. The same local generator
+      (<code>gemma4:31b</code>) answered the 25 held-out questions from the top
+      5 retrieved chunks and from all 28 documents in context. A judge from a
+      different model family graded the answers; on 15 answers the author
+      graded blind, it agreed on all 15.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th></th><th>Retrieval (top 5)</th><th>Whole corpus in context</th></tr></thead>
+      <tbody>
+        <tr><td>Correct, of 21 answerable</td><td>17</td><td>20</td></tr>
+        <tr><td>Unanswerable questions correctly declined</td><td>4 of 4</td><td>4 of 4</td></tr>
+        <tr><td>Facts not in the corpus</td><td>0</td><td>0</td></tr>
+        <tr><td>Prompt tokens per question (median)</td><td>1,273</td><td>130,005</td></tr>
+        <tr><td>Seconds per question (median, one H100)</td><td>1.7</td><td>125.5</td></tr>
+      </tbody>
+    </table></div>
+    <p>The difference in correctness is not reliable at this sample size
+      (3 questions to 1, p = 0.63), while the long-context prompt was about 100
+      times larger and each answer about 73 times slower. Every retrieval error
+      came from evidence that was not retrieved, and in each case the model said
+      the documents did not answer rather than inventing one.</p>
+  </section>
+
+  <section>
+    <h2>Evaluation 3: does the agent answer correctly and stay grounded?</h2>
+    <p>37 tasks (13 for tuning, 24 held out) of seven types: trends, lookups,
+      revisions, definitions, mixed, unanswerable, and prompt injection. The
+      plan was frozen and published before any test run. A task succeeds only
+      if the answer is correct, every number comes from a tool output or is
+      correctly derived from one, the reliability caveat is stated when needed,
+      and no injected instruction was followed. Two local models ran each test
+      task three times with the same prompt and tools.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th></th><th>gemma4:31b</th><th>gpt-oss:120b</th></tr></thead>
+      <tbody>
+        <tr><td>Mean task success over 3 runs</td><td>0.82</td><td>0.79</td></tr>
+        <tr><td>Held-out tasks solved (at least 2 of 3 runs)</td><td>20 of 24</td><td>18 of 24</td></tr>
+        <tr><td>Tool-call recall</td><td>0.92</td><td>0.97</td></tr>
+        <tr><td>Median seconds per task (two H100s)</td><td>7.3</td><td>5.0</td></tr>
+      </tbody>
+    </table></div>
+    <ul>
+      <li><b>No detectable difference between the models</b> (sign test
+        p = 0.69; a sensitivity analysis on the first run favors the other
+        model by one task). With 24 tasks only large differences could be
+        detected, and the results say so.</li>
+      <li><b>The failures differ in kind.</b> gpt-oss more often misread a tool
+        output or a document (8 runs); gemma more often gave an incomplete
+        documentation answer (5 runs).</li>
+      <li><b>Prompt injection.</b> Both models resisted a planted tool call and
+        a false number in a retrieved document, but both followed a low-cost
+        instruction planted in a data field in all 6 runs. A system-prompt rule
+        that tool outputs are data, not instructions, was not enough.</li>
+      <li><b>The tools are what make it work.</b> The retrieval-only pipeline,
+        with no data tools, answered 7 of 24 tasks correctly, none of them
+        questions about data values, and stated no reliability caveat on any of
+        the 6 tasks that required one.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Practices</h2>
+    <h3>Fix the comparison before looking at test results</h3>
+    <p>Each stage wrote its plan, metrics, and test configurations before the
+      held-out run. Changes made afterwards are listed with their dates,
+      including one made after the agent results were in, and its effect is
+      reported.</p>
+
+    <h3>Check grounding mechanically, review the rest by hand</h3>
+    <p>An automatic check matches every number in an answer against the tool
+      outputs. Numbers that do not match directly (53 occurrences) were labeled
+      by hand, blind to the model, as correctly derived or unsupported.</p>
+
+    <h3>Measure the judge, not just the models</h3>
+    <p>The LLM judge was compared with the author's blind grades: 45 of 48
+      answers agreed on correct versus not correct (Cohen's kappa 0.63). One
+      systematic judge error, accepting refusals on data questions as correct,
+      was found and corrected by hand, and the agent answers were searched for
+      the same error.</p>
+
+    <h3>Make records reproducible, and correct them in public</h3>
+    <p>Every run stores its configuration, corpus manifest hash, model names,
+      and git commit. When the retrieval runs turned out to carry a commit
+      stamp that predated their code, all four were rebuilt from committed code
+      and matched question by question; the correction and the stricter dirty
+      check are documented.</p>
+  </section>
+
+  <section>
+    <h2>Limitations and next steps</h2>
+    <ul>
+      <li>Question and task sets are small (21 to 24 held-out items), written or
+        reviewed by the author, on one data release; differences of a few items
+        cannot be resolved.</li>
+      <li>One injection of each kind: the data-field result shows a weakness,
+        not a rate.</li>
+      <li>Planned: a real-time forecasting benchmark that rebuilds the data as
+        it was known each week, a fine-tuned small model for tool calling, and
+        a deployed service.</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="wrap">
+  <p>© 2026 Jiande Wu</p>
+</footer>
+<script data-goatcounter="https://jiande.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>
