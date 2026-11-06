@@ -181,6 +181,7 @@ a.stat:hover { border-color: var(--accent); }
 .stat-name { font-size: 0.8rem; color: var(--muted); }
 .stat-value { font-size: 1.45rem; font-weight: 600; margin: 2px 0; }
 .stat-note { font-size: 0.78rem; color: var(--muted); }
+.numbers-note { font-size: 0.78rem; }
 .news-numbers { list-style: none; padding: 0; margin: 16px 0 0; }
 .news-numbers li { margin-bottom: 8px; line-height: 1.6; }
 .news-numbers b { font-size: 1.1rem; margin-right: 6px; }
