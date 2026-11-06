@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>每天翻一翻</title>
 <meta name="description" content="每天会翻一翻的两份小报：AI 前沿导读和美股公告与要闻。">
-<link rel="stylesheet" href="../style.css?v=2026-11-05d">
+<link rel="stylesheet" href="../style.css?v=2026-11-06a">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -78,20 +78,22 @@
   <section id="photos">
     <h2>📷 随手拍</h2>
     <div class="photos">
-      <figure><a href="photos/spring-lawn.webp"><img src="photos/spring-lawn-thumb.webp" alt="春天的草坪" width="600" height="338" loading="lazy"></a>
-        <figcaption>春天的草坪 · 2022-03</figcaption></figure>
-      <figure><a href="photos/summer-beach.webp"><img src="photos/summer-beach-thumb.webp" alt="海边的傍晚" width="600" height="360" loading="lazy"></a>
-        <figcaption>海边的傍晚 · 2016-06</figcaption></figure>
-      <figure><a href="photos/summer-sunset.webp"><img src="photos/summer-sunset-thumb.webp" alt="树影里的日落" width="512" height="384" loading="lazy"></a>
-        <figcaption>树影里的日落 · 2008-06</figcaption></figure>
-      <figure><a href="photos/summer-fishing.webp"><img src="photos/summer-fishing-thumb.webp" alt="海边钓鱼" width="600" height="450" loading="lazy"></a>
-        <figcaption>海边钓鱼 · 2008-06</figcaption></figure>
-      <figure><a href="photos/summer-lake.webp"><img src="photos/summer-lake-thumb.webp" alt="湖边" width="600" height="450" loading="lazy"></a>
-        <figcaption>湖边 · 2023-08</figcaption></figure>
-      <figure><a href="photos/autumn-path-1.webp"><img src="photos/autumn-path-1-thumb.webp" alt="落叶小路" width="288" height="512" loading="lazy"></a>
-        <figcaption>落叶小路 · 2024-10</figcaption></figure>
-      <figure><a href="photos/winter-snow.webp"><img src="photos/winter-snow-thumb.webp" alt="雪后" width="600" height="338" loading="lazy"></a>
-        <figcaption>雪后 · 2016-01</figcaption></figure>
+      <div class="photos-track">
+        <figure><a href="photos/spring-lawn.webp"><img src="photos/spring-lawn-thumb.webp" alt="春天的草坪" width="600" height="338"></a>
+          <figcaption>春天的草坪 · 2022-03</figcaption></figure>
+        <figure><a href="photos/summer-beach.webp"><img src="photos/summer-beach-thumb.webp" alt="海边的傍晚" width="600" height="360"></a>
+          <figcaption>海边的傍晚 · 2016-06</figcaption></figure>
+        <figure><a href="photos/summer-sunset.webp"><img src="photos/summer-sunset-thumb.webp" alt="树影里的日落" width="512" height="384"></a>
+          <figcaption>树影里的日落 · 2008-06</figcaption></figure>
+        <figure><a href="photos/summer-fishing.webp"><img src="photos/summer-fishing-thumb.webp" alt="海边钓鱼" width="600" height="450"></a>
+          <figcaption>海边钓鱼 · 2008-06</figcaption></figure>
+        <figure><a href="photos/summer-lake.webp"><img src="photos/summer-lake-thumb.webp" alt="湖边" width="600" height="450"></a>
+          <figcaption>湖边 · 2023-08</figcaption></figure>
+        <figure><a href="photos/autumn-path-1.webp"><img src="photos/autumn-path-1-thumb.webp" alt="落叶小路" width="288" height="512"></a>
+          <figcaption>落叶小路 · 2024-10</figcaption></figure>
+        <figure><a href="photos/winter-snow.webp"><img src="photos/winter-snow-thumb.webp" alt="雪后" width="600" height="338"></a>
+          <figcaption>雪后 · 2016-01</figcaption></figure>
+      </div>
     </div>
   </section>
 
@@ -165,6 +167,19 @@
     function tick() { el.textContent = " · 🕐 美东 " + time("America/New_York") + " · 北京 " + time("Asia/Shanghai"); }
     tick();
     setInterval(tick, 60000);
+  })();
+
+  // Photo strip: append a hidden copy of the photos so the scroll loops without a seam.
+  (function () {
+    var track = document.querySelector(".photos-track");
+    Array.prototype.slice.call(track.children).forEach(function (fig) {
+      var copy = fig.cloneNode(true);
+      copy.setAttribute("aria-hidden", "true");
+      copy.querySelector("a").tabIndex = -1;
+      track.appendChild(copy);
+    });
+    track.style.animationDuration = track.children.length * 3 + "s";
+    track.classList.add("looping");
   })();
 
   // Photo wall: open the full-size image in a dialog; without JavaScript the link opens the image.
