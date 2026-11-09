@@ -77,6 +77,7 @@ h2 {
   display: grid; gap: 14px;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
 }
+.cards.pair { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
 .card {
   position: relative; display: flex; flex-direction: column;
   padding: 16px; border: 1px solid var(--line); border-radius: 8px;
@@ -145,8 +146,10 @@ html[lang="zh-CN"] .card h3 { color: var(--c, var(--accent)); }
 .c-teal { --c: #0f766e; }
 .c-blue { --c: #1d4ed8; }
 .c-purple { --c: #7c3aed; }
+.c-rose { --c: #be185d; }
 @media (prefers-color-scheme: dark) {
   .c-purple { --c: #a78bfa; }
+  .c-rose { --c: #f472b6; }
   .c-orange { --c: #fb923c; }
   .c-blue { --c: #60a5fa; }
   .c-teal { --c: #2dd4bf; }

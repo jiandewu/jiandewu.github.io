@@ -52,8 +52,9 @@ jobs:
           done
 
           # The live pages answer, and the dated JSON files are recent (catches failed Pages builds).
+          # The podcast page is only checked for liveness: new episodes come once or twice a week.
           for url in "$SITE/" "$SITE/zh/" "$SITE/ai-frontier-digest/" "$SITE/ai-frontier-digest/science/" \
-                     "$SITE/ai-frontier-digest/longread/" "$SITE/us-market/"; do
+                     "$SITE/ai-frontier-digest/longread/" "$SITE/ai-frontier-digest/podcast/" "$SITE/us-market/"; do
             code=$(curl -s -o /dev/null -w '%{http_code}' -L --max-time 30 "$url" || echo 000)
             echo "$url: HTTP $code"
             [ "$code" = 200 ] || note "$url 返回 HTTP $code"

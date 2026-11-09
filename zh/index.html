@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>每天翻一翻</title>
 <meta name="description" content="每天会翻一翻的两份小报：AI 前沿导读和美股公告与要闻。">
-<link rel="stylesheet" href="../style.css?v=2026-11-09a">
+<link rel="stylesheet" href="../style.css?v=2026-11-09b">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -61,11 +61,19 @@
   </section>
 
   <section>
-    <div class="card c-purple">
-      <span class="tag">📖 今日长文</span>
-      <h3><a id="lr-link" href="../ai-frontier-digest/longread/">每天一篇值得读原文的英文长文</a></h3>
-      <p id="lr-why">从英文长文刊物里每天只挑一篇，附三四百字的中文导读，适合找个安静的时候慢慢读。</p>
-      <span class="tag" id="lr-meta" hidden></span>
+    <div class="cards pair">
+      <div class="card c-purple">
+        <span class="tag">📖 今日长文</span>
+        <h3><a id="lr-link" href="../ai-frontier-digest/longread/">每天一篇值得读原文的英文长文</a></h3>
+        <p id="lr-why">从英文长文刊物里每天只挑一篇，附三四百字的中文导读，适合找个安静的时候慢慢读。</p>
+        <span class="tag" id="lr-meta" hidden></span>
+      </div>
+      <div class="card c-rose">
+        <h3><a href="../ai-frontier-digest/podcast/">🎧 播客导读</a></h3>
+        <p>没空听两小时的英文播客？读几分钟中文导读，看看嘉宾聊了什么、值不值得听。</p>
+        <ol class="latest" id="podcast-latest" hidden></ol>
+        <span class="tag" id="podcast-updated" hidden></span>
+      </div>
     </div>
   </section>
 
@@ -101,6 +109,7 @@
   <section>
     <p class="more">📮 用 RSS 订阅：<a href="../ai-frontier-digest/science/feed.xml">科学前沿导读</a> ·
       <a href="../ai-frontier-digest/longread/feed.xml">每日长文</a> ·
+      <a href="../ai-frontier-digest/podcast/feed.xml">播客导读</a> ·
       <a href="../ai-frontier-digest/feed.xml">AI 前沿导读</a> ·
       <a href="../us-market/feed.xml">美股要闻</a><span id="clocks"></span></p>
   </section>
@@ -241,6 +250,7 @@
   }).catch(function () {});
   fillFromFeed("../ai-frontier-digest/science/feed.xml", "science-latest", "science-updated");
   fillFromFeed("../ai-frontier-digest/feed.xml", "ai-latest", "ai-updated");
+  fillFromFeed("../ai-frontier-digest/podcast/feed.xml", "podcast-latest", "podcast-updated");
 
   // "最近的几个数": market tiles first, then finance and arXiv tiles, then numbers from the news.
   function addTile(t) {
