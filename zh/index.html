@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>每天翻一翻</title>
 <meta name="description" content="每天会翻一翻的两份小报：AI 前沿导读和美股公告与要闻。">
-<link rel="stylesheet" href="../style.css?v=2026-11-06e">
+<link rel="stylesheet" href="../style.css?v=2026-11-09a">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -32,7 +32,7 @@
     <div class="masthead-text">
       <h1 id="greeting">你好 ☕</h1>
       <p id="today"></p>
-      <p id="poem"></p>
+      <p id="tip" hidden><a id="tip-link" href="https://eternity4719.github.io/HowToLiveBetter/"></a></p>
     </div>
   </header>
   <p class="intro">这里放着我每天会翻一翻的几份小报。休闲时候，随便看看。</p>
@@ -129,32 +129,16 @@
       [4, 4, "清明"], [4, 20, "谷雨"], [5, 5, "立夏"], [5, 21, "小满"], [6, 5, "芒种"], [6, 21, "夏至"],
       [7, 7, "小暑"], [7, 22, "大暑"], [8, 7, "立秋"], [8, 23, "处暑"], [9, 7, "白露"], [9, 23, "秋分"],
       [10, 8, "寒露"], [10, 23, "霜降"], [11, 7, "立冬"], [11, 22, "小雪"], [12, 7, "大雪"], [12, 21, "冬至"]];
-    var today = new Date(now.getFullYear(), m - 1, d), term = "", name = "冬至";
+    var today = new Date(now.getFullYear(), m - 1, d), term = "";
     for (var i = 0; i < terms.length; i++) {
       var t = terms[i], date = new Date(now.getFullYear(), t[0] - 1, t[1]);
       var days = Math.round((date - today) / 86400000);
-      if (days === 0) { term = "今天" + t[2]; name = t[2]; break; }
-      if (days === 1) { term = "明天" + t[2]; name = t[2]; break; }
-      if (days > 1 && days <= 7) { term = days + " 天后" + t[2]; name = t[2]; break; }
-      if (days < 0) { term = t[2] + "时节"; name = t[2]; }
+      if (days === 0) { term = "今天" + t[2]; break; }
+      if (days === 1) { term = "明天" + t[2]; break; }
+      if (days > 1 && days <= 7) { term = days + " 天后" + t[2]; break; }
+      if (days < 0) { term = t[2] + "时节"; }
     }
     if (!term) term = "冬至时节";
-    // One line per solar term; the author is left out where the attribution is uncertain.
-    var poems = {
-      "小寒": "孤舟蓑笠翁，独钓寒江雪。— 柳宗元", "大寒": "晚来天欲雪，能饮一杯无？— 白居易",
-      "立春": "不知细叶谁裁出，二月春风似剪刀。— 贺知章", "雨水": "好雨知时节，当春乃发生。— 杜甫",
-      "惊蛰": "微雨众卉新，一雷惊蛰始。", "春分": "沾衣欲湿杏花雨，吹面不寒杨柳风。— 志南",
-      "清明": "清明时节雨纷纷，路上行人欲断魂。— 杜牧", "谷雨": "人间四月芳菲尽，山寺桃花始盛开。— 白居易",
-      "立夏": "小荷才露尖尖角，早有蜻蜓立上头。— 杨万里", "小满": "夜来南风起，小麦覆陇黄。— 白居易",
-      "芒种": "时雨及芒种，四野皆插秧。", "夏至": "昼晷已云极，宵漏自此长。",
-      "小暑": "接天莲叶无穷碧，映日荷花别样红。— 杨万里", "大暑": "绿树阴浓夏日长，楼台倒影入池塘。— 高骈",
-      "立秋": "睡起秋声无觅处，满阶梧叶月明中。", "处暑": "空山新雨后，天气晚来秋。— 王维",
-      "白露": "露从今夜白，月是故乡明。— 杜甫", "秋分": "天阶夜色凉如水，坐看牵牛织女星。— 杜牧",
-      "寒露": "可怜九月初三夜，露似真珠月似弓。— 白居易", "霜降": "停车坐爱枫林晚，霜叶红于二月花。— 杜牧",
-      "立冬": "荷尽已无擎雨盖，菊残犹有傲霜枝。— 苏轼", "小雪": "燕山雪花大如席，片片吹落轩辕台。— 李白",
-      "大雪": "忽如一夜春风来，千树万树梨花开。— 岑参", "冬至": "天时人事日相催，冬至阳生春又来。— 杜甫"
-    };
-    document.getElementById("poem").textContent = poems[name];
     var week = "日一二三四五六".charAt(now.getDay());
     document.getElementById("today").textContent = m + "月" + d + "日 周" + week + " · " + term;
   })();
@@ -286,6 +270,16 @@
   function getJSON(url) {
     return fetch(url).then(function (r) { return r.json(); }).catch(function () { return null; });
   }
+  // One random line from 高性价比人生指南 (CC BY 4.0); tools/howtolivebetter.py builds the list.
+  getJSON("howtolivebetter.json").then(function (data) {
+    var items = data && data.items;
+    if (!items || !items.length) return;
+    var it = items[Math.floor(Math.random() * items.length)], link = document.getElementById("tip-link");
+    link.textContent = it[2];
+    link.href = "https://eternity4719.github.io/HowToLiveBetter/#e-" + it[0] + "-" + it[1];
+    link.title = "高性价比人生指南 第 " + it[0] + " 节第 " + it[1] + " 条 · eternity4719，CC BY 4.0";
+    document.getElementById("tip").hidden = false;
+  });
   var market = getJSON("../us-market/latest.json"), more = getJSON("../ai-frontier-digest/numbers/latest.json");
   Promise.all([market, more]).then(function (results) {
     (results[0] && results[0].macro || []).forEach(function (m) {
