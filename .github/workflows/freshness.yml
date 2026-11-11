@@ -37,6 +37,7 @@ jobs:
           for row in "AI 前沿导读|jiandewu/ai-frontier-digest|data" \
                      "科学前沿导读|jiandewu/ai-frontier-digest|science/data" \
                      "每日长文|jiandewu/ai-frontier-digest|longread/data" \
+                     "最近的几个数|jiandewu/ai-frontier-digest|numbers" \
                      "美股要闻|jiandewu/us-market|news"; do
             IFS='|' read -r label repo path <<< "$row"
             when=$(gh api "repos/$repo/commits?path=$path&per_page=1" --jq '.[0].commit.committer.date' 2>/dev/null || true)
@@ -60,9 +61,11 @@ jobs:
             [ "$code" = 200 ] || note "$url 返回 HTTP $code"
           done
           today=$(TZ=America/New_York date +%F)
-          for row in "每日长文|$SITE/ai-frontier-digest/longread/latest.json" "美股要闻|$SITE/us-market/latest.json"; do
+          for row in "每日长文|$SITE/ai-frontier-digest/longread/latest.json" \
+                     "最近的几个数|$SITE/ai-frontier-digest/numbers/latest.json" \
+                     "美股要闻|$SITE/us-market/latest.json"; do
             IFS='|' read -r label url <<< "$row"
-            day=$(curl -s -L --max-time 30 "$url" | jq -r '.date // empty' 2>/dev/null || true)
+            day=$(curl -s -L --max-time 30 "$url" | jq -r '(.date // .updated // empty)[0:10]' 2>/dev/null || true)
             if [ -z "$day" ]; then
               note "$label：$url 读不到日期"
               continue
